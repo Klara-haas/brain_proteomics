@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 import seaborn as sns
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
@@ -17,7 +18,8 @@ def preprocess():
     print(Fore.MAGENTA + "\n ⭐️ Use case: preprocess" + Style.RESET_ALL)
 
     # Retrieve data
-    data = pd.read_csv('..brain_proteomics/raw_data/brain_proteomics_data.csv')
+    file_path=os.path.join(os.path.dirname(__file__), '..','raw_data','brain_proteomics_data.csv')
+    data = pd.read_csv(file_path)
 
     #Process data
     data_clean= clean_data(data)
@@ -30,3 +32,4 @@ def preprocess():
     return X, y
 
 preprocess()
+#print(os.path.join(os.path.dirname(__file__), '..','raw_data','brain_proteomics_data.csv'))
