@@ -2,8 +2,17 @@ import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-#from taxifare.ml_logic.preprocessor import preprocess_features
+# imports for preprocessing and model
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split, cross_validate, cross_val_score
+from sklearn.linear_model import SGDClassifier
+from sklearn.preprocessing import MinMaxScaler
+
+from model import load_model
 #from taxifare.ml_logic.registry import load_model
+
+# define functions because I don't know how to import them
 
 app = FastAPI()
 
@@ -16,42 +25,43 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-#app.state.model = load_model()
+# Load model
+app.state.model = load_model()
 
-# http://127.0.0.1:8000/predict?pickup_datetime=2012-10-06 12:10:20&pickup_longitude=40.7614327&pickup_latitude=-73.9798156&dropoff_longitude=40.6513111&dropoff_latitude=-73.8803331&passenger_count=2
-# @app.get("/predict")
-# def predict(
-#         pickup_datetime: str,  # 2013-07-06 17:18:00
-#         pickup_longitude: float,    # -73.950655
-#         pickup_latitude: float,     # 40.783282
-#         dropoff_longitude: float,   # -73.984365
-#         dropoff_latitude: float,    # 40.769802
-#         passenger_count: int
-#     ):      # 1
-#     """
-#     Make a single course prediction.
-#     Assumes `pickup_datetime` is provided as a string by the user in "%Y-%m-%d %H:%M:%S" format
-#     Assumes `pickup_datetime` implicitly refers to the "US/Eastern" timezone (as any user in New York City would naturally write)
-#     """
-#     X_pred = pd.DataFrame(locals(), index=[0])
+# http://127.0.0.1:8000/predict?path=/home/jana/code/jfschulz/project-brain-proteomics/raw_data&file=Glioma-clinic-TCGA-proteins-test-with-identifier.csv
+@app.get("/predict")
+def predict(
+            path: str, #"/home/jana/code/jfschulz/project-brain-proteomics/raw_data"
+            file: str, # "Glioma-clinic-TCGA-proteins-test-with-identifier.csv"
+            ):
+    """
+    Make a prediction for every row in your dataset.
+    Input needs to be a csv file with rows = samples and columns = proteins.
+    The first row has to contain the protein names or any other identifier that will serve as a header.
+    If your file has a sample identifier column, name this column "Identifier"
+    """
 
-#     # X_pred = pd.DataFrame({'pickup_datetime': pickup_datetime,
-#     #                   'pickup_longitude': pickup_longitude,
-#     #                   'pickup_latitude': pickup_latitude,
-#     #                   'dropoff_longitude': dropoff_longitude,
-#     #                   'dropoff_latitude': dropoff_latitude,
-#     #                   'passenger_count': passenger_count})
+    df = pd.read_csv(f"{path}/{file}", header=0)
 
-#     X_pred['pickup_datetime'] = pd.Timestamp(pickup_datetime, tz='US/Eastern')
+    if 'Identifier' in df.columns:
+        X_pred = df.drop(["Identifier"], axis = 1)
+    else:
+        X_pred = df
 
-#     model = app.state.model
+    model = app.state.model
 
-#     X_preproc = preprocess_features(X_pred)
+    # X_pred_proc = preprocess_features(X_pred)
 
-#     prediction = model.predict(X_preproc)
-#     return dict(fare_amount = float(prediction))
+    # Predict data
+    outcome = pd.DataFrame(model.predict(X_pred), columns=["Outcome"])
+    prob = pd.DataFrame(model.predict_proba(X_pred), columns=["Probability_0", "Probability_1"])
+
+    # Merge results into dataframe
+    result = pd.merge(prob,outcome, left_index=True, right_index=True)
+
+    return result
 
 
 @app.get("/")
 def root():
-    return {'greeting': 'Hello'} # YOUR CODE HERE
+    return {'greeting': 'Hello'}
