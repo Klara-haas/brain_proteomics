@@ -1,6 +1,7 @@
 # Hello world!
 
 import streamlit as st
+import pandas as pd
 import requests
 
 '''
@@ -11,6 +12,20 @@ st.markdown('''
 Here is the frontend of the app
 This front queries the Brain Proteomics [API](https://.../predict?param0=0&param1=1)
 ''')
+
+
+st.markdown('''
+Oligodendroglioma or Astrocytoma? Let's predict based on proteomics data!
+Upload your data here:
+''')
+st.set_option('deprecation.showfileUploaderEncoding', False)
+
+uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+
+if uploaded_file is not None:
+    data = pd.read_csv(uploaded_file)
+    st.write(data.head(3))
+
 
 
 '''
@@ -35,8 +50,8 @@ brainproteomics_api_url = 'https://.../predict'
 
 st.header(f'My Prediction: 100')            # $(pred)')
 
-''''''
+'''
 df
 histogram
 heatmap
-''''''
+'''
