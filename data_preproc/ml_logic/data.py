@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import MinMaxScaler, OrdinalEncoder
+from sklearn import set_config
+set_config(display = 'diagram')
+from sklearn.compose import make_column_transformer, make_column_selector
 
 
 def clean_data (df: pd.DataFrame) -> pd.DataFrame:
@@ -18,14 +22,24 @@ def clean_data (df: pd.DataFrame) -> pd.DataFrame:
     print("✅ data cleaned and scaled")
     return df
 
-def preprocess_features(X: pd.DataFrame) ->np.ndarray:
+def preprocess_features(df: pd.DataFrame) ->np.ndarray:
     """
     - transform cleaned dataset with MinMaxScaler for all lfq-intensities of proteins.
-    -
+    - MinMaxScaler for age
+    - Oridnal Encoder for gender
 
     """
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    X.iloc[:, 12:179] = scaler.fit_transform(X.iloc[:, 12:179])
-    X= X.iloc[:, 12:179]
-    
-    return X
+    preproc_numerical = make_pipeline(
+    MinMaxScaler()
+    )
+    preproc_categorical = make_pipeline(
+    OrdinalEncoder()
+    )
+    preproc_base = make_column_transformer(
+    (preproc_categorical, ['gender']),
+    (preproc_numerical, make_column_selector(dtype_include=["int64", "float64"]))
+    )
+
+    X_preproc = pd.DataFrame(preproc_base.fit_transform(df))
+
+    return X_preproc

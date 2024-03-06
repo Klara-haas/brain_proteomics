@@ -25,12 +25,10 @@ def preprocess():
     data_clean= clean_data(data)
 
     # define X and y
-    X = preprocess_features(data)
+    X_preproc = preprocess_features(data)
     y= data_clean['outcome']
 
     print("✅ preprocess() done \n")
-    return X, y
+    return X_preproc, y
 
-preprocess()
-#print(os.path.join(os.path.dirname(__file__), '..','raw_data','brain_proteomics_data.csv'))
-# hello
+#X_preproc, y =preprocess()
