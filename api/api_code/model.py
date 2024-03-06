@@ -5,7 +5,7 @@ import os
 
 def save_model(model_to_save = None,
                model_type = None,
-               path_to_save = "/home/jana/code/jfschulz/project-brain-proteomics/brain_proteomics/api/saved_models"
+               path_to_save = "/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_models"
               ):
     """
     Persist trained model locally on the hard drive at f"{path_to_save/model_type_{timestamp}.joblib"
@@ -22,7 +22,7 @@ def save_model(model_to_save = None,
 
 
 
-def load_model(path = '/home/jana/code/jfschulz/project-brain-proteomics/brain_proteomics/api/saved_models',
+def load_model(path = '/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_models',
                file = 'SGDclassifier_20240305-135742.joblib'
               ):
     path_file = f"{path}/{file}"
