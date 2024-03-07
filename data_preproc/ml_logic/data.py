@@ -73,13 +73,26 @@ def preprocess_proteins_all(X_train, X_val, X_test):
 
     return X_train, X_val, X_test
 
-def synthetic_data(X, y) -> np.array:
+def synthetic_data_gen_age(X, y) -> np.array:
     """
     - Create training data with SMOTE.
     - n_samples = 200 -> total number of data points for each class
     - output will be X_train and y_train equally balanced 200 samples per class (1 and 0)
     """
-    sampler = SMOTENC(categorical_features=[0,1], sampling_strategy={0: y.value_counts()[0]*2, 1: y.value_counts()[1]*2})
+    sampler = SMOTENC(categorical_features= [0,1], sampling_strategy={0: y.value_counts()[0]*2, 1: y.value_counts()[1]*2})
+    X_train, y_train = sampler.fit_resample(X, y)
+
+    print (f"✅ synthetic data created on training set. Size of new training set: {X_train.shape}")
+
+    return X_train, y_train
+
+def synthetic_data_all(X,y) -> np.array:
+    """
+    - Create training data with SMOTE.
+    - n_samples = 200 -> total number of data points for each class
+    - output will be X_train and y_train equally balanced 200 samples per class (1 and 0)
+    """
+    sampler = SMOTENC(categorical_features= [1,2,3,6], sampling_strategy={0: y.value_counts()[0]*2, 1: y.value_counts()[1]*2})
     X_train, y_train = sampler.fit_resample(X, y)
 
     print (f"✅ synthetic data created on training set. Size of new training set: {X_train.shape}")

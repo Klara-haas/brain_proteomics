@@ -5,7 +5,7 @@ import seaborn as sns
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 from sklearn import set_config; set_config(display = "diagram")
-from ml_logic.data import preproc_input, clean_data, preprocess_proteins_age_gen, preprocess_proteins_all, synthetic_data
+from ml_logic.data import preproc_input, clean_data, preprocess_proteins_age_gen, preprocess_proteins_all, synthetic_data_gen_age,synthetic_data_all
 from sklearn.model_selection import train_test_split
 
 def preprocess_age_gen():
@@ -41,7 +41,7 @@ def preprocess_age_gen():
     print (f"✅ Validation data splitted. Size: {X_val.shape}")
 
     # produce synthetic data with SMOTE on training set
-    X_train, y_train = synthetic_data(X_train, y_train)
+    X_train, y_train = synthetic_data_gen_age(X_train, y_train)
 
     # preprocess X_train, X_test and X_val
     X_train, X_val, X_test, preproc_base = preprocess_proteins_age_gen(X_train, X_val, X_test)
@@ -50,7 +50,7 @@ def preprocess_age_gen():
 
     return X_train, y_train, X_val, y_val, X_test, y_test, preproc_base
 
-X_train, y_train, X_val, y_val, X_test, y_test, preproc_base= preprocess_age_gen()
+#X_train, y_train, X_val, y_val, X_test, y_test, preproc_base= preprocess_age_gen()
 
 def preprocess_all():
     """
@@ -82,7 +82,7 @@ def preprocess_all():
     print (f"✅ Validation data splitted. Size: {X_val.shape}")
 
     # produce synthetic data with SMOTE on training set
-    X_train, y_train = synthetic_data(X_train, y_train)
+    X_train, y_train = synthetic_data_all(X_train, y_train)
 
     # preprocess X_train, X_test and X_val
     X_train, X_val, X_test = preprocess_proteins_all(X_train, X_val, X_test)
@@ -91,9 +91,9 @@ def preprocess_all():
 
     return X_train, y_train, X_val, y_val, X_test, y_test
 
-#preprocess_all()
+preprocess_all()
 
-def preprocess_input():
+def preprocess_input() -> np.array:
     """
     - Query example file of input from 'raw_data' folder
     - process data (proteins, age and gender)
@@ -115,4 +115,6 @@ def preprocess_input():
     # preprocess X_train, X_test and X_val
     X_pred= preproc_input(X, preproc_base)
 
-preprocess_input()
+    return X_pred
+
+# preprocess_input()
