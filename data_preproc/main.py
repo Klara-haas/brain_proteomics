@@ -7,6 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn import set_config; set_config(display = "diagram")
 from ml_logic.data import preproc_input, clean_data, preprocess_proteins_age_gen, preprocess_proteins_all, synthetic_data_gen_age,synthetic_data_all
 from sklearn.model_selection import train_test_split
+import joblib
 
 def preprocess_age_gen():
     """
@@ -50,7 +51,10 @@ def preprocess_age_gen():
 
     return X_train, y_train, X_val, y_val, X_test, y_test, preproc_base
 
-#X_train, y_train, X_val, y_val, X_test, y_test, preproc_base= preprocess_age_gen()
+X_train, y_train, X_val, y_val, X_test, y_test, preproc_base= preprocess_age_gen()
+
+joblib.dump(preproc_base, 'scaler.gz')
+
 
 def preprocess_all():
     """
@@ -91,7 +95,7 @@ def preprocess_all():
 
     return X_train, y_train, X_val, y_val, X_test, y_test
 
-preprocess_all()
+#preprocess_all()
 
 def preprocess_input() -> np.array:
     """
@@ -112,9 +116,12 @@ def preprocess_input() -> np.array:
     # define X
     X = data_clean.drop(['Case', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome'], axis = 1)
 
+    preproc_scaler = joblib.load('scaler.gz')
     # preprocess X_train, X_test and X_val
-    X_pred= preproc_input(X, preproc_base)
+    X_pred= preproc_scaler.transform(X)
 
     return X_pred
+
+preprocess_input()
 
 # preprocess_input()
