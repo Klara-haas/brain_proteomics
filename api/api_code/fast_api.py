@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile
 from io import BytesIO, StringIO
 import json
+from model import load_model
+from preprocess import load_scaler, preprocess_input, clean_data
 
 # imports for preprocessing and model
 import pandas as pd
@@ -43,27 +45,24 @@ def predict_uploaded_file(file: UploadFile = File(...)):
     #     }
     # return results
 
-    X_pred = df.drop(columns="Identifier")
+    data = df.drop(columns="Identifier")
 
 
     # Preprocess
-    # Load scaler
-    scaler = load_scaler(path = '/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_scalers',
-                         file = 'MinMax_20240306-102844.joblib'
-                        )
+    X_pred = preprocess_input(data)
 
-    X_pred_proc = scaler.transform(X_pred)
 
     # Predict data
-    model = load_model()
+    model = load_model(path ='/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_scalers',
+                        file = 'svc_model.pkl')
 
-    outcome_num = int(model.predict(X_pred_proc)[0])
+    outcome_num = int(model.predict(X_pred)[0])
     if outcome_num == 0:
         outcome = "good cancer"
-        probability = round(float(model.predict_proba(X_pred_proc)[0][0]), 4)
+        probability = round(float(model.predict_proba(X_pred)[0][0]), 4)
     else:
         outcome = "bad cancer"
-        probability = round(float(model.predict_proba(X_pred_proc)[0][1]), 4)
+        probability = round(float(model.predict_proba(X_pred)[0][1]), 4)
 
     return {
                 "Outcome": outcome,
