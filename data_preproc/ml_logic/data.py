@@ -45,16 +45,15 @@ def preprocess_proteins_age_gen(X_train, X_val, X_test):
     X_val = preproc_base.transform(X_val)
     X_test= preproc_base.transform(X_test)
 
-    return X_train, X_val, X_test
+    return X_train, X_val, X_test, preproc_base
 
-def preprocess_proteins_all(df: pd.DataFrame) ->np.ndarray:
+def preprocess_proteins_all(X_train, X_val, X_test):
     """
     - transform cleaned dataset with MinMaxScaler for all lfq-intensities of proteins.
     - MinMaxScaler for age, years of birth, mutation count.
     - Oridnal Encoder for gender, radiation therapy, grade, IDH status
 
     """
-    prot_all = df.drop(['Case', 'histological_type', 'race', 'ethnicity','outcome'], axis = 1)
 
     preproc_numerical = make_pipeline(
     MinMaxScaler()
@@ -68,9 +67,11 @@ def preprocess_proteins_all(df: pd.DataFrame) ->np.ndarray:
     (preproc_numerical, make_column_selector(dtype_include=["int64", "float64"]))
 )
 
-    X_preproc = preproc_all.fit_transform(prot_all)
+    X_train = preproc_all.fit_transform(X_train)
+    X_val = preproc_all.transform(X_val)
+    X_test= preproc_all.transform(X_test)
 
-    return X_preproc
+    return X_train, X_val, X_test
 
 def synthetic_data(X, y) -> np.array:
     """
@@ -84,3 +85,14 @@ def synthetic_data(X, y) -> np.array:
     print (f"✅ synthetic data created on training set. Size of new training set: {X_train.shape}")
 
     return X_train, y_train
+
+def preproc_input(X, preproc_base):
+    """
+    - transform cleaned dataset with MinMaxScaler for all lfq-intensities of proteins.
+    - MinMaxScaler for age
+    - Oridnal Encoder for gender
+    - pipeline fit in preprocess_proteins_age_gen()
+    """
+
+    X_predict = preproc_base.transform(X)
+    return X_predict
