@@ -1,6 +1,9 @@
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, File, UploadFile
+from io import BytesIO, StringIO
+import json
 
 # imports for preprocessing and model
 import pandas as pd
@@ -27,69 +30,20 @@ app.add_middleware(
 # Load model up front --> not sure yet if that will work
 # app.state.model = load_model()
 
-# http://127.0.0.1:8000/predict?
-# path=/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/raw_data
-# &file=Glioma-clinic-TCGA-proteins-test-with-identifier.csv
-@app.get("/predict")
-def predict(
-            path: str, #"/home/jana/code/jfschulz/project-brain-proteomics/raw_data"
-            file: str, # "Glioma-clinic-TCGA-proteins-test-with-identifier.csv"
-            ):
-    """
-    Make a prediction for every row in your dataset.
-    Input needs to be a csv file with rows = samples and columns = proteins.
-    The first row has to contain the protein names or any other identifier that will serve as a header.
-    If your file has a sample identifier column, name this column "Identifier"
-    """
+@app.post("/predict_uploaded_file")
+def predict_uploaded_file(file: UploadFile = File(...)):
+    contents = file.file.read() # Reading content of 'myfile' in bytes
+    # print(contents)
+    decoded_str = contents.decode('utf-8') # Decoding contents into str type
+    # decoded_str = StringIO(contents.decode('utf-8')) # Alternative using StringIO
+    df_json = json.loads(decoded_str) # Reading string and converting to json (dictionary)
+    df = pd.DataFrame(df_json) # Reading dictionary and converting into dataframe
+    # results = {
+    #     "value": float(df["Identifier"][0])
+    #     }
+    # return results
 
-    df = pd.read_csv(f"{path}/{file}", header=0)
-
-    if 'Identifier' in df.columns:
-        X_pred = df.drop(["Identifier"], axis = 1)
-    else:
-        X_pred = df
-
-
-    # Preprocess
-    # Load scaler
-    scaler = load_scaler(path = '/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_scalers',
-                         file = 'MinMax_20240306-102844.joblib'
-                        )
-
-    X_pred_proc = scaler.transform(X_pred)
-
-    # Predict data
-    model = load_model()
-
-    outcome = pd.DataFrame(model.predict(X_pred_proc), columns=["Outcome"], dtype = int)
-    prob = pd.DataFrame(model.predict_proba(X_pred_proc), columns=["Probability_0", "Probability_1"], dtype = float)
-
-    # Merge results into dataframe
-    result = pd.merge(prob,outcome, left_index=True, right_index=True)
-    result_dict = result.to_dict('series')
-
-    return {k: v.tolist() for k, v in result.iterrows()}
-
-    #return {"Outcome": result["outcome"][1]}
-
-@app.get("/predict_one")
-def predict_one(
-            path: str, #"/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/raw_data"
-            file: str, # "Glioma-clinic-TCGA-proteins-test-with-identifier-outcome0.csv"
-            ):
-    """
-    Make a prediction for every row in your dataset.
-    Input needs to be a csv file with rows = samples and columns = proteins.
-    The first row has to contain the protein names or any other identifier that will serve as a header.
-    If your file has a sample identifier column, name this column "Identifier"
-    """
-
-    df = pd.read_csv(f"{path}/{file}", header=0)
-
-    if 'Identifier' in df.columns:
-        X_pred = df.drop(["Identifier"], axis = 1)
-    else:
-        X_pred = df
+    X_pred = df.drop(columns="Identifier")
 
 
     # Preprocess

@@ -3,6 +3,7 @@
 import streamlit as st
 import pandas as pd
 import requests
+from io import BytesIO
 
 '''
 # BrainProteomics front
@@ -20,11 +21,22 @@ Upload your data here:
 ''')
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+df = st.file_uploader("Choose a CSV file", type="csv")
 
-if uploaded_file is not None:
-    data = pd.read_csv(uploaded_file)
+if df is not None:
+    data = pd.read_csv(df)
     st.write(data.head(3))
+
+data_byte = data.to_json().encode()
+
+brainproteomics_api_url = 'http://127.0.0.1:8000/predict_uploaded_file'
+response = requests.post(brainproteomics_api_url, files={"file": data_byte})
+
+prediction = response.json()
+
+st.write(prediction)
+
+
 
 
 
@@ -41,17 +53,24 @@ params = dict(
     param1=param1)
 '''
 
-brainproteomics_api_url = 'https://.../predict'
-#response = requests.get(brainproteomics_api_url, params=params)
 
-#prediction = response.json()
 
-#pred = prediction['my prediction']
+########## Code to upload file using file path and file name ############################################
+#'''
+#1. Please add the following informations to get your prediction:
+#- path to your file
+#- file name
+#'''
 
-st.header(f'My Prediction: 100')            # $(pred)')
+# path = st.text_input('path1', '/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/raw_data')
+# file = st.text_input('file1', 'Glioma-clinic-TCGA-proteins-test-with-identifier-outcome1.csv')
 
-'''
-df
-histogram
-heatmap
-'''
+
+# params = {'path': path,
+#           'file': file}
+# brainproteomics_api_url = 'http://127.0.0.1:8000/predict_one'
+# response = requests.get(brainproteomics_api_url, params=params)
+
+# prediction = response.json()
+
+# st.write(prediction)
