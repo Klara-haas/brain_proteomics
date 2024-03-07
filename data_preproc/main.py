@@ -53,7 +53,8 @@ def preprocess_age_gen():
 
 X_train, y_train, X_val, y_val, X_test, y_test, preproc_base= preprocess_age_gen()
 
-joblib.dump(preproc_base, 'scaler.gz')
+scaler_path= os.path.join(os.path.dirname(__file__), '..','data_preproc/scaler.gz')
+joblib.dump(preproc_base, scaler_path)
 
 
 def preprocess_all():
