@@ -53,7 +53,7 @@ def preprocess_age_gen():
 
 X_train, y_train, X_val, y_val, X_test, y_test, preproc_base= preprocess_age_gen()
 
-scaler_path= os.path.join(os.path.dirname(__file__), '..','data_preproc/scaler.gz')
+scaler_path= os.path.join(os.path.dirname(__file__), '..','data_preproc/scaler.joblib')
 joblib.dump(preproc_base, scaler_path)
 
 
@@ -117,7 +117,7 @@ def preprocess_input() -> np.array:
     # define X
     X = data_clean.drop(['Case', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome'], axis = 1)
 
-    preproc_scaler = joblib.load('scaler.gz')
+    preproc_scaler = joblib.load('scaler.joblib')
     # preprocess X_train, X_test and X_val
     X_pred= preproc_scaler.transform(X)
 
