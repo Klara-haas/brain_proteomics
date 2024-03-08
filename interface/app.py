@@ -19,22 +19,38 @@ st.markdown('''
 Oligodendroglioma or Astrocytoma? Let's predict based on proteomics data!
 Upload your data here:
 ''')
-st.set_option('deprecation.showfileUploaderEncoding', False)
+#st.set_option('deprecation.showfileUploaderEncoding', False)
 
-df = st.file_uploader("Choose a CSV file", type="csv")
+data = st.file_uploader("Choose a CSV file", type="csv")
+#breakpoint()
+#if data:
+#df = pd.read_csv(data)
+#st.write(df.head(3))
 
-if df is not None:
-    data = pd.read_csv(df)
-    st.write(data.head(3))
+#st.write(df["Identifier"])
 
-data_byte = data.to_json().encode()
+#data.seek(0)
 
-brainproteomics_api_url = 'http://127.0.0.1:8000/predict_uploaded_file'
-response = requests.post(brainproteomics_api_url, files={"file": data_byte})
+#data_byte = df.to_json().encode()
+#st.write(type(data_byte))
+#data_byte = data.encode()
+
+# try with /predict_uploaded_file_test
+brainproteomics_api_url = 'http://127.0.0.1:8000/predict_uploaded_file_test'
+response = requests.post(brainproteomics_api_url, files={"file": data})
 
 prediction = response.json()
 
 st.write(prediction)
+
+
+# here is some problem currently
+#brainproteomics_api_url = 'http://127.0.0.1:8000/predict_uploaded_file'
+#response = requests.post(brainproteomics_api_url, files={"file": data_byte})
+
+#prediction = response.json()
+
+#st.write(prediction)
 
 
 
