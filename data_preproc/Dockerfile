@@ -1,14 +1,14 @@
 # $DEL_BEGIN
 
 # ####### 👇 SIMPLE SOLUTION (x86 and M1) 👇 ########
-FROM python:3.8.12-buster
+FROM python:3.10.6-buster
 
  WORKDIR /prod
 
  COPY requirements.txt requirements.txt
  RUN pip install -r requirements.txt
 
- COPY brain_proteomics brain_proteomics
+ COPY data_preproc data_preproc
  COPY setup.py setup.py
  RUN pip install .
 
