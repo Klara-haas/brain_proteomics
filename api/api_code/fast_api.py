@@ -34,7 +34,7 @@ app.add_middleware(
 # app.state.model = load_model()
 
 
-# Test function to check that api and website can communicate
+######### Test function to check that api and website can communicate #########
 @app.post("/predict_uploaded_file_test")
 def predict_uploaded_file_test(file: UploadFile = File(...)):
     contents = file.file.read()
@@ -58,7 +58,7 @@ def predict_uploaded_file_test(file: UploadFile = File(...)):
     return results
 
 
-# Run prediction
+######### Run prediction for 1 sample ##########################################
 @app.post("/predict_uploaded_file")
 def predict_uploaded_file(file: UploadFile = File(...)):
     contents = file.file.read()
@@ -88,10 +88,10 @@ def predict_uploaded_file(file: UploadFile = File(...)):
 
     outcome_num = int(model.predict(X_pred)[0])
     if outcome_num == 0:
-        outcome = "good cancer"
+        outcome = "Oligodendroglioma"
         probability = round(float(model.predict_proba(X_pred)[0][0]), 4)
     else:
-        outcome = "bad cancer"
+        outcome = "Astrocytoma"
         probability = round(float(model.predict_proba(X_pred)[0][1]), 4)
 
     return {
@@ -99,6 +99,42 @@ def predict_uploaded_file(file: UploadFile = File(...)):
                 "Probability": probability
     }
 
+
+######### Run prediction of several samples ####################################
+@app.post("/predict_several_samples")
+def predict_several_samples(file: UploadFile = File(...)):
+    contents = file.file.read()
+    print(type(contents))
+    decoded_str = contents.decode('utf-8')
+    print(type(decoded_str))
+    print(decoded_str)
+
+    rows = decoded_str.split('\n')
+
+    # Split each row into columns
+    data = [row.split(',') for row in rows]
+
+    # Convert the data into a DataFrame
+    df = pd.DataFrame(data[1:], columns=data[0])
+    print(df.head(3))
+
+    df = df.drop(columns="Identifier", axis = 1)
+
+    # Preprocess
+    X_pred = preprocess_input(df)
+
+    # Predict data
+    model = load_model(path ='/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_models',
+                        file = 'sgd_model.pkl')
+
+    outcome = pd.DataFrame(model.predict(X_pred), columns=["Outcome"], dtype = int)
+    prob = pd.DataFrame(model.predict_proba(X_pred), columns=["Probability_0", "Probability_1"], dtype = float)
+
+    # Merge results into dataframe
+    result = pd.merge(prob,outcome, left_index=True, right_index=True)
+    result_dict = result.to_dict('series')
+
+    return {k: v.tolist() for k, v in result.iterrows()}
 
 
 
