@@ -23,25 +23,61 @@ Upload your data here:
 
 data = st.file_uploader("Choose a CSV file", type="csv")
 #breakpoint()
-#if data:
-#df = pd.read_csv(data)
-#st.write(df.head(3))
+if data:
+    df = pd.read_csv(data)
+    st.write(df.head(3))
 
-#st.write(df["Identifier"])
+st.write(df["Identifier"])
 
-#data.seek(0)
+data.seek(0) # to reload data into the buffer
 
 #data_byte = df.to_json().encode()
 #st.write(type(data_byte))
 #data_byte = data.encode()
 
 # try with /predict_uploaded_file_test
-brainproteomics_api_url = 'http://127.0.0.1:8000/predict_uploaded_file_test'
+#brainproteomics_api_url = 'http://127.0.0.1:8000/predict_uploaded_file_test'
+#response = requests.post(brainproteomics_api_url, files={"file": data})
+
+#prediction = response.json()
+
+#st.write(prediction)
+
+st.markdown('''
+**Test**:
+This is a test to make sure that the data can be loaded and passed to the api.
+If it works it will return the value of first column, first row in the df.
+''')
+# try with endpoint predict_uploaded_file_test
+# include string concatenation to avoid errors
+# this works
+base_url = 'http://127.0.0.1:8000'
+endpoint = 'predict_uploaded_file_test'
+brainproteomics_api_url = f'{base_url}/{endpoint}'
 response = requests.post(brainproteomics_api_url, files={"file": data})
 
 prediction = response.json()
 
 st.write(prediction)
+
+
+data.seek(0)
+st.markdown('''
+### Make Prediction
+Run prediction with SVC model
+''')
+# try with endpoint predict_uploaded_file_test
+# include string concatenation to avoid errors
+# this works
+base_url = 'http://127.0.0.1:8000'
+endpoint = 'predict_uploaded_file'
+brainproteomics_api_url = f'{base_url}/{endpoint}'
+response = requests.post(brainproteomics_api_url, files={"file": data})
+
+prediction = response.json()
+
+st.write(prediction)
+
 
 
 # here is some problem currently

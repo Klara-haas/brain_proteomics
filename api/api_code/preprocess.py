@@ -51,7 +51,7 @@ def preprocess_input(data) -> np.array:
     data_clean= clean_data(data)
 
     # define X
-    #X = data_clean.drop(['Case', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome'], axis = 1)
+    X = data_clean.drop(['Case', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status'], axis = 1)
     X = data_clean
 
     preproc_scaler = load_scaler(path = '/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_scalers',
@@ -61,7 +61,6 @@ def preprocess_input(data) -> np.array:
     X_pred= preproc_scaler.transform(X)
 
     return X_pred
-
 
 
 
