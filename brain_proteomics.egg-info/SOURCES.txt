@@ -1,0 +1,8 @@
+README.md
+setup.py
+brain_proteomics.egg-info/PKG-INFO
+brain_proteomics.egg-info/SOURCES.txt
+brain_proteomics.egg-info/dependency_links.txt
+brain_proteomics.egg-info/not-zip-safe
+brain_proteomics.egg-info/requires.txt
+brain_proteomics.egg-info/top_level.txt
