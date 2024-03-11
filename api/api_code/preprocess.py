@@ -53,7 +53,8 @@ def preprocess_input(data) -> np.array:
     # define X
     X = data_clean.drop(['Case', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status'], axis = 1)
 
-    preproc_scaler = load_scaler(path = '/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_scalers',
+    path = os.getcwd()
+    preproc_scaler = load_scaler(path = path,
                                  file = 'scaler.joblib'
                                 )
     # preprocess X_train, X_test and X_val
@@ -80,3 +81,31 @@ def save_scaler(scaler_to_save = None,
     dump(scaler_to_save, scaler_path_file)
 
     print(f"✅ Scaler saved locally at {scaler_path_file}")
+
+
+def save_model(model_to_save = None,
+               model_type = None,
+               path_to_save = "/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_models"
+              ):
+    """
+    Persist trained model locally on the hard drive at f"{path_to_save/model_type_{timestamp}.joblib"
+    """
+
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+
+    # Save model locally
+    model_path_file = os.path.join(f"{path_to_save}/{model_type}_{timestamp}.joblib")
+
+    dump(model_to_save, model_path_file)
+
+    print(f"✅ Model saved locally at {model_path_file}")
+
+
+
+def load_model(path = '/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_models',
+               file = 'SGDclassifier_20240305-135742.joblib'
+              ):
+    path_file = f"{path}/{file}"
+
+    model = load(path_file)
+    return model

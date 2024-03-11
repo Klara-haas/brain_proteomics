@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile
 from io import BytesIO, StringIO
 import json
-from model import load_model
-from preprocess import load_scaler, preprocess_input, clean_data
+from preprocess import load_scaler, preprocess_input, clean_data, load_model
+import os
 
 # imports for preprocessing and model
 import pandas as pd
@@ -15,9 +15,6 @@ from sklearn.model_selection import train_test_split, cross_validate, cross_val_
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import MinMaxScaler
 
-from model import load_model
-from preprocess import load_scaler
-#from taxifare.ml_logic.registry import load_model
 
 app = FastAPI()
 
@@ -59,45 +56,45 @@ def predict_uploaded_file_test(file: UploadFile = File(...)):
 
 
 ######### Run prediction for 1 sample ##########################################
-@app.post("/predict_uploaded_file")
-def predict_uploaded_file(file: UploadFile = File(...)):
-    contents = file.file.read()
-    print(type(contents))
-    decoded_str = contents.decode('utf-8')
-    print(type(decoded_str))
-    print(decoded_str)
+# @app.post("/predict_uploaded_file")
+# def predict_uploaded_file(file: UploadFile = File(...)):
+#     contents = file.file.read()
+#     print(type(contents))
+#     decoded_str = contents.decode('utf-8')
+#     print(type(decoded_str))
+#     print(decoded_str)
 
-    rows = decoded_str.split('\n')
+#     rows = decoded_str.split('\n')
 
-    # Split each row into columns
-    data = [row.split(',') for row in rows]
+#     # Split each row into columns
+#     data = [row.split(',') for row in rows]
 
-    # Convert the data into a DataFrame
-    df = pd.DataFrame(data[1:], columns=data[0])
-    print(df.head(3))
+#     # Convert the data into a DataFrame
+#     df = pd.DataFrame(data[1:], columns=data[0])
+#     print(df.head(3))
 
-    df = df.drop(columns="Identifier", axis = 1)
+#     df = df.drop(columns="Identifier", axis = 1)
 
 
-    # Preprocess
-    X_pred = preprocess_input(df)
+#     # Preprocess
+#     X_pred = preprocess_input(df)
 
-    # Predict data
-    model = load_model(path ='/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_models',
-                        file = 'sgd_model.pkl')
+#     # Predict data
+#     model = load_model(path ='/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/api_code',
+#                         file = 'sgd_model.pkl')
 
-    outcome_num = int(model.predict(X_pred)[0])
-    if outcome_num == 0:
-        outcome = "Oligodendroglioma"
-        probability = round(float(model.predict_proba(X_pred)[0][0]), 4)
-    else:
-        outcome = "Astrocytoma"
-        probability = round(float(model.predict_proba(X_pred)[0][1]), 4)
+#     outcome_num = int(model.predict(X_pred)[0])
+#     if outcome_num == 0:
+#         outcome = "Oligodendroglioma"
+#         probability = round(float(model.predict_proba(X_pred)[0][0]), 4)
+#     else:
+#         outcome = "Astrocytoma"
+#         probability = round(float(model.predict_proba(X_pred)[0][1]), 4)
 
-    return {
-                "Outcome": outcome,
-                "Probability": probability
-    }
+#     return {
+#                 "Outcome": outcome,
+#                 "Probability": probability
+#     }
 
 
 ######### Run prediction of several samples ####################################
@@ -124,7 +121,9 @@ def predict_several_samples(file: UploadFile = File(...)):
     X_pred = preprocess_input(df)
 
     # Predict data
-    model = load_model(path ='/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_models',
+    path = os.getcwd()
+    print(path)
+    model = load_model(path = path,
                         file = 'sgd_model.pkl')
 
     outcome = pd.DataFrame(model.predict(X_pred), columns=["Outcome"], dtype = int)
@@ -145,10 +144,6 @@ def predict_several_samples(file: UploadFile = File(...)):
     prediction = {k: v.tolist() for k, v in result_df.iterrows()}
 
     return prediction
-
-
-
-
 
 
 

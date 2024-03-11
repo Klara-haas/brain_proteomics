@@ -4,6 +4,7 @@ import numpy as np
 import requests
 from io import BytesIO
 import base64
+import plotly.express as px
 
 
 st.set_page_config(layout="wide") # sets layout to wide
@@ -130,6 +131,7 @@ if st.button('Run prediction for all samples'):
     # print is visible in the server output, not in the page
 
     base_url = 'http://127.0.0.1:8000'
+    #base_url = "https://brainproteomics-hnkdsog4wq-ew.a.run.app"
     endpoint = 'predict_several_samples'
     brainproteomics_api_url = f'{base_url}/{endpoint}'
     response = requests.post(brainproteomics_api_url, files={"file": data})
@@ -142,9 +144,28 @@ if st.button('Run prediction for all samples'):
                                           1: "Prediction",
                                           2: "Probability"})
 
-    st.write(result_df)
+    c1, c2, c3 = st.columns((1.5, 2, 2))
 
+    with c1:
+        c1.subheader("Table with prediction results")
+        st.write(result_df)
 
+    with c2:
+        c2.subheader("Proportion of predicted cancer types")
+        pie = px.pie(result_df,
+                     values=result_df["Prediction"].value_counts().values,
+                     names=result_df["Prediction"].unique()
+                     )
+        st.plotly_chart(pie)
+
+    with c3:
+        c3.subheader("Probability of predicted cancer types")
+        box = px.box(result_df, x = "Prediction", y='Probability',
+                     color='Prediction',
+                     )
+                    #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
+                    #)
+        st.plotly_chart(box)
 
 else:
     st.write('I was not clicked 😞')
