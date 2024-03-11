@@ -4,7 +4,8 @@ nbresult
 ipdb
 ipykernel
 #yapf
-#matplotlib
+matplotlib
+plotly
 #pygeohash
 pytest
 seaborn
@@ -34,6 +35,8 @@ psycopg2-binary
 fastapi==0.108.0
 pytz
 uvicorn
+streamlit
+
 # tests
 ##httpx
 #pytest-asyncio
