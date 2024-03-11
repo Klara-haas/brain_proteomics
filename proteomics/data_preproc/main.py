@@ -19,7 +19,7 @@ def preprocess_age_gen():
     print(" Preprocess proteins, age and gender... ")
 
     # Retrieve data
-    file_path=os.path.join(os.path.dirname(__file__), '..','..','raw_data','brain_proteomics_data.csv')
+    file_path=os.path.join(os.path.dirname(__file__), '..','raw_data','brain_proteomics_data.csv')
     data = pd.read_csv(file_path)
 
     #Process data
@@ -117,7 +117,7 @@ def preprocess_input() -> np.array:
     print(" Preprocess input proteins, age and gender... ")
 
     # Retrieve data
-    file_path=os.path.join(os.path.dirname(__file__), '..','..','raw_data','brain_proteomics_data_input.csv')
+    file_path=os.path.join(os.path.dirname(__file__), '..','raw_data','brain_proteomics_data_input.csv')
     data = pd.read_csv(file_path)
 
     #Process data

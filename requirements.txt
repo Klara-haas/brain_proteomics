@@ -1,5 +1,5 @@
 #wheel
-#nbresult
+nbresult
 #colorama
 ipdb
 ipykernel
@@ -25,8 +25,9 @@ pyarrow
 
 mlflow==2.1.1
 prefect==2.14.9
-
+python-multipart==0.0.9
 python-dotenv
+
 psycopg2-binary
 
 # API
