@@ -5,7 +5,7 @@ import seaborn as sns
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 from sklearn import set_config; set_config(display = "diagram")
-from ml_logic.data import preproc_input, clean_data, preprocess_proteins_age_gen, preprocess_proteins_all, synthetic_data_gen_age,synthetic_data_all
+from proteomics.data_preproc.data import preproc_input, clean_data, preprocess_proteins_age_gen, preprocess_proteins_all, synthetic_data_gen_age,synthetic_data_all
 from sklearn.model_selection import train_test_split
 import joblib
 
