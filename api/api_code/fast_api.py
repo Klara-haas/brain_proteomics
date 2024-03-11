@@ -115,10 +115,10 @@ def predict_several_samples(file: UploadFile = File(...)):
     data = [row.split(',') for row in rows]
 
     # Convert the data into a DataFrame
-    df = pd.DataFrame(data[1:], columns=data[0])
-    print(df.head(3))
+    df_upload = pd.DataFrame(data[1:], columns=data[0])
+    print(df_upload.head(3))
 
-    df = df.drop(columns="Identifier", axis = 1)
+    df = df_upload.drop(columns="Identifier", axis = 1)
 
     # Preprocess
     X_pred = preprocess_input(df)
@@ -132,9 +132,19 @@ def predict_several_samples(file: UploadFile = File(...)):
 
     # Merge results into dataframe
     result = pd.merge(prob,outcome, left_index=True, right_index=True)
-    result_dict = result.to_dict('series')
 
-    return {k: v.tolist() for k, v in result.iterrows()}
+    # Make the dataframe easily interpretable for the user
+    result["Prediction"] = result["Outcome"].apply(lambda x: str("Oligodendroglioma") if x == 0 else str("Astrocytoma"))
+    result["Probability"] = np.where(result["Outcome"] == 0,
+                                    result["Probability_0"],
+                                    result["Probability_1"])
+    result_df = result[["Prediction", "Probability"]]
+    result_df = df_upload[["Identifier"]].merge(result_df, left_index=True, right_index=True) # add idenfitier column from uploaded dataframe back to output
+
+    # transform dataframe into list so it can be returned from api
+    prediction = {k: v.tolist() for k, v in result_df.iterrows()}
+
+    return prediction
 
 
 

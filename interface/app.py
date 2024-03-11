@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import requests
 from io import BytesIO
 
@@ -27,10 +28,11 @@ data = st.file_uploader("Choose a CSV file", type="csv")
 
 if st.button('Show my uploaded data'):
     # print is visible in the server output, not in the page
-    df = pd.read_csv(data)
-    st.write(df.head(3))
+    df_upload = pd.read_csv(data)
+    st.write(df_upload.head(3))
 
-data.seek(0) # to reload data into the buffer
+if data:
+    data.seek(0) # to reload data into the buffer
 
 
 # st.markdown('''
@@ -90,7 +92,15 @@ if st.button('Run prediction for all samples'):
 
     prediction = response.json()
     st.write('Prediction was successful 🎉')
-    st.write(prediction)
+
+    result_df = pd.DataFrame(prediction).transpose()
+    result_df = result_df.rename(columns={0: "Identifier",
+                                          1: "Prediction",
+                                          2: "Probability"})
+
+    st.write(result_df)
+
+
 
 else:
     st.write('I was not clicked 😞')
