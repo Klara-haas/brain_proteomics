@@ -22,8 +22,6 @@ def clean_data (df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop_duplicates()
     df = df.dropna(how='any', axis=0)
 
-    #clinical_data= ['Case', 'years_to_birth', 'gender', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome' ]
-
     print("✅ Data cleaned")
     return df
 

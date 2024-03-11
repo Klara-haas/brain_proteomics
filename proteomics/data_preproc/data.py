@@ -20,8 +20,6 @@ def clean_data (df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop_duplicates()
     df = df.dropna(how='any', axis=0)
 
-    #clinical_data= ['Case', 'years_to_birth', 'gender', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome' ]
-
     print("✅ Data cleaned")
     return df
 
@@ -79,19 +77,6 @@ def synthetic_data_gen_age(X, y) -> np.array:
     - output will be X_train and y_train equally balanced 200 samples per class (1 and 0)
     """
     sampler = SMOTE(sampling_strategy={0: y.value_counts()[0]*2, 1: y.value_counts()[1]*2})
-    X_train, y_train = sampler.fit_resample(X, y)
-
-    print (f"✅ synthetic data created on training set. Size of new training set: {X_train.shape}")
-
-    return X_train, y_train
-
-def synthetic_data_all(X,y) -> np.array:
-    """
-    - Create training data with SMOTE.
-    - n_samples = 200 -> total number of data points for each class
-    - output will be X_train and y_train equally balanced 200 samples per class (1 and 0)
-    """
-    sampler = SMOTENC(categorical_features= [1,2,3,6], sampling_strategy={0: y.value_counts()[0]*2, 1: y.value_counts()[1]*2})
     X_train, y_train = sampler.fit_resample(X, y)
 
     print (f"✅ synthetic data created on training set. Size of new training set: {X_train.shape}")
