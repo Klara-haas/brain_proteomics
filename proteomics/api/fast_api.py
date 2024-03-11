@@ -1,18 +1,16 @@
 import pandas as pd
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, File, UploadFile
+from joblib import dump, load
+from io import BytesIO, StringIO
+import json
+from proteomics.data_preproc.preprocess import load_scaler, preprocess_input, clean_data
 
 # imports for preprocessing and model
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split, cross_validate, cross_val_score
-from sklearn.linear_model import SGDClassifier
-from sklearn.preprocessing import MinMaxScaler
-
-from model import load_model
-from preprocess import load_scaler
 import os
-#from taxifare.ml_logic.registry import load_model
+
 
 app = FastAPI()
 
@@ -28,41 +26,105 @@ app.add_middleware(
 # Load model up front --> not sure yet if that will work
 # app.state.model = load_model()
 
-# http://127.0.0.1:8000/predict?
-# path=/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/raw_data
-# &file=Glioma-clinic-TCGA-proteins-test-with-identifier.csv
-@app.get("/predict")
-def predict(
-            path: str, #"/home/jana/code/jfschulz/project-brain-proteomics/raw_data"
-            file: str, # "Glioma-clinic-TCGA-proteins-test-with-identifier.csv"
-            ):
-    """
-    Make a prediction for every row in your dataset.
-    Input needs to be a csv file with rows = samples and columns = proteins.
-    The first row has to contain the protein names or any other identifier that will serve as a header.
-    If your file has a sample identifier column, name this column "Identifier"
-    """
 
-    df = pd.read_csv(f"{path}/{file}", header=0)
+# Test function to check that api and website can communicate
+@app.post("/predict_uploaded_file_test")
+def predict_uploaded_file_test(file: UploadFile = File(...)):
+    contents = file.file.read()
+    print(type(contents))
+    decoded_str = contents.decode('utf-8')
+    print(type(decoded_str))
+    print(decoded_str)
+    #print("test")
 
-    if 'Identifier' in df.columns:
-        X_pred = df.drop(["Identifier"], axis = 1)
+    rows = decoded_str.split('\n')
+
+    # Split each row into columns
+    data = [row.split(',') for row in rows]
+
+    # Convert the data into a DataFrame
+    df = pd.DataFrame(data[1:], columns=data[0])
+
+    results = {
+        'first value': float(df["Identifier"][0])
+        }
+    return results
+
+
+# Run prediction
+@app.post("/predict_uploaded_file")
+def predict_uploaded_file(file: UploadFile = File(...)):
+    contents = file.file.read()
+    print(type(contents))
+    decoded_str = contents.decode('utf-8')
+    print(type(decoded_str))
+    print(decoded_str)
+
+    rows = decoded_str.split('\n')
+
+    # Split each row into columns
+    data = [row.split(',') for row in rows]
+
+    # Convert the data into a DataFrame
+    df = pd.DataFrame(data[1:], columns=data[0])
+    #print(df.head(3))
+
+    df = df.drop(columns="Identifier", axis = 1)
+
+    #print(type(df))
+    # Preprocess
+    X_pred = preprocess_input(df)
+
+    # Predict data+
+
+    current_path = os.path.dirname(__file__)
+    model = load(os.path.join(current_path,'..','models', 'log_reg_model.pkl'))
+
+    outcome_num = int(model.predict(X_pred)[0])
+    if outcome_num == 0:
+        outcome = "Oligodendroglioma"
+        probability = round(float(model.predict_proba(X_pred)[0][0]), 4)
     else:
-        X_pred = df
+        outcome = "Astrocytoma"
+        probability = round(float(model.predict_proba(X_pred)[0][1]), 4)
 
+    return {
+                "Outcome": outcome,
+                "Probability": probability
+    }
+
+@app.get("/")
+def root():
+    return {'greeting': 'Hello'}
+
+######### Run prediction of several samples ####################################
+@app.post("/predict_several_samples")
+def predict_several_samples(file: UploadFile = File(...)):
+    contents = file.file.read()
+    print(type(contents))
+    decoded_str = contents.decode('utf-8')
+    print(type(decoded_str))
+    print(decoded_str)
+
+    rows = decoded_str.split('\n')
+
+    # Split each row into columns
+    data = [row.split(',') for row in rows]
+
+    # Convert the data into a DataFrame
+    df = pd.DataFrame(data[1:], columns=data[0])
+    print(df.head(3))
+
+    df = df.drop(columns="Identifier", axis = 1)
 
     # Preprocess
-    # Load scaler
-    current_path = os.path.dirname(__file__)
-    scaler = load_scaler(os.path.join(current_path,'saved_scalers','MinMax_20240306-102844.joblib'))
-
-    X_pred_proc = scaler.transform(X_pred)
+    X_pred = preprocess_input(df)
 
     # Predict data
-    model = load_model()
-
-    outcome = pd.DataFrame(model.predict(X_pred_proc), columns=["Outcome"], dtype = int)
-    prob = pd.DataFrame(model.predict_proba(X_pred_proc), columns=["Probability_0", "Probability_1"], dtype = float)
+    current_path = os.path.dirname(__file__)
+    model =load(os.path.join(current_path,'..','models', 'log_reg_model.pkl'))
+    outcome = pd.DataFrame(model.predict(X_pred), columns=["Outcome"], dtype = int)
+    prob = pd.DataFrame(model.predict_proba(X_pred), columns=["Probability_0", "Probability_1"], dtype = float)
 
     # Merge results into dataframe
     result = pd.merge(prob,outcome, left_index=True, right_index=True)
@@ -70,54 +132,44 @@ def predict(
 
     return {k: v.tolist() for k, v in result.iterrows()}
 
-    #return {"Outcome": result["outcome"][1]}
 
-@app.get("/predict_one")
-def predict_one(
-            path: str, #"/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/raw_data"
-            file: str, # "Glioma-clinic-TCGA-proteins-test-with-identifier-outcome0.csv"
-            ):
-    """
-    Make a prediction for every row in your dataset.
-    Input needs to be a csv file with rows = samples and columns = proteins.
-    The first row has to contain the protein names or any other identifier that will serve as a header.
-    If your file has a sample identifier column, name this column "Identifier"
-    """
+###############################################################################
+# for some reason this code doesn't work anymore
+# @app.post("/predict_uploaded_file")
+# def predict_uploaded_file(file: UploadFile = File(...)):
+#     contents = file.file.read() # Reading content of 'myfile' in bytes
+#     #print(contents)
+#     decoded_str = contents.decode('utf-8') # Decoding contents into str type
+#     # decoded_str = StringIO(contents.decode('utf-8')) # Alternative using StringIO
+#     df_json = json.loads(decoded_str) # Reading string and converting to json (dictionary)
+#     df = pd.DataFrame(df_json) # Reading dictionary and converting into dataframe
+#     # results = {
+#     #     "value": float(df["Identifier"][0])
+#     #     }
+#     # return results
 
-    df = pd.read_csv(f"{path}/{file}", header=0)
-
-    if 'Identifier' in df.columns:
-        X_pred = df.drop(["Identifier"], axis = 1)
-    else:
-        X_pred = df
+#     data = df.drop(columns="Identifier")
 
 
-    # Preprocess
-    # Load scaler
-
-    scaler = load_scaler(path = '~/api/saved_scalers',
-                         file = 'MinMax_20240306-102844.joblib'
-                        )
-
-    X_pred_proc = scaler.transform(X_pred)
-
-    # Predict data
-    model = load_model()
-
-    outcome_num = int(model.predict(X_pred_proc)[0])
-    if outcome_num == 0:
-        outcome = "good cancer"
-        probability = round(float(model.predict_proba(X_pred_proc)[0][0]), 4)
-    else:
-        outcome = "bad cancer"
-        probability = round(float(model.predict_proba(X_pred_proc)[0][1]), 4)
-
-    return {
-                "Outcome": outcome,
-                "Probability": probability
-    }
+#     # Preprocess
+#     X_pred = preprocess_input(data)
 
 
-@app.get("/")
-def root():
-    return {'greeting': 'Hello'}
+#     # Predict data
+#     model = load_model(path ='/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_scalers',
+#                         file = 'svc_model.pkl')
+
+#     outcome_num = int(model.predict(X_pred)[0])
+#     if outcome_num == 0:
+#         outcome = "good cancer"
+#         probability = round(float(model.predict_proba(X_pred)[0][0]), 4)
+#     else:
+#         outcome = "bad cancer"
+#         probability = round(float(model.predict_proba(X_pred)[0][1]), 4)
+
+#     return {
+#                 "Outcome": outcome,
+#                 "Probability": probability
+#     }
+import sklearn
+print(sklearn.__version__)

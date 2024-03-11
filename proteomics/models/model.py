@@ -19,13 +19,3 @@ def save_model(model_to_save = None,
     dump(model_to_save, model_path_file)
 
     print(f"✅ Model saved locally at {model_path_file}")
-
-
-
-def load_model(path = '~/api/saved_models',
-               file = 'SGDclassifier_20240305-135742.joblib'
-              ):
-    path_file = f"{path}/{file}"
-
-    model = load(path_file)
-    return model

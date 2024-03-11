@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
 import os
-import seaborn as sns
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
 from sklearn import set_config; set_config(display = "diagram")
-from proteomics.data_preproc.data import preproc_input, clean_data, preprocess_proteins_age_gen, preprocess_proteins_all, synthetic_data_gen_age,synthetic_data_all
+from data import preproc_input, clean_data, preprocess_proteins_age_gen, preprocess_proteins_all, synthetic_data_gen_age,synthetic_data_all
+from preprocess import save_scaler
 from sklearn.model_selection import train_test_split
 import joblib
 
@@ -21,7 +19,7 @@ def preprocess_age_gen():
     print(" Preprocess proteins, age and gender... ")
 
     # Retrieve data
-    file_path=os.path.join(os.path.dirname(__file__), '..','raw_data','brain_proteomics_data.csv')
+    file_path=os.path.join(os.path.dirname(__file__), '..','..','raw_data','brain_proteomics_data.csv')
     data = pd.read_csv(file_path)
 
     #Process data
@@ -29,11 +27,18 @@ def preprocess_age_gen():
 
 
     # define X and y
-    X = data_clean.drop(['Case', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome'], axis = 1)
+    X = data_clean.drop(['Case', 'gender', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome'], axis = 1)
     y= data_clean['outcome']
 
+    # define 17 proteins that are used for model
+    P17_list = ['Syk_p', 'YAP_pS127_p', 'AR_p', 'ACC1_p', 'YAP_p',
+        'HER3_pY1289_p', 'c-Kit_p', 'ACC_pS79_p', 'STAT3_pY705_p', 'DJ-1_p',
+        '53BP1_p', 'p27_p', 'PDK1_p', 'S6_pS235_S236_p', 'PRDX1_p', 'Bax_p', 'IRS1_p']
+
+    X_P17 = X[['years_to_birth'] + P17_list]
+
     # train-test/val split -- 35 %
-    X_train, X_val_test, y_train, y_val_test = train_test_split(X, y, test_size=0.35, stratify=y)
+    X_train, X_val_test, y_train, y_val_test = train_test_split(X_P17, y, test_size=0.35, stratify=y)
     print (f"✅ Training data splitted. Size : {X_train.shape}")
 
     # test-val split -- 50 %
@@ -53,8 +58,12 @@ def preprocess_age_gen():
 
 X_train, y_train, X_val, y_val, X_test, y_test, preproc_base= preprocess_age_gen()
 
-scaler_path= os.path.join(os.path.dirname(__file__), '..','data_preproc/scaler.joblib')
-joblib.dump(preproc_base, scaler_path)
+#scaler_path= os.path.join(os.path.dirname(__file__), '..','data_preproc/scaler.joblib')
+#joblib.dump(preproc_base, scaler_path)
+
+#save_scaler(scaler_to_save = preproc_base,
+#              path_to_save = os.path.join(os.path.dirname(__file__), '..','models/')
+#            )
 
 
 def preprocess_all():
@@ -108,21 +117,27 @@ def preprocess_input() -> np.array:
     print(" Preprocess input proteins, age and gender... ")
 
     # Retrieve data
-    file_path=os.path.join(os.path.dirname(__file__), '..','raw_data','brain_proteomics_data_input.csv')
+    file_path=os.path.join(os.path.dirname(__file__), '..','..','raw_data','brain_proteomics_data_input.csv')
     data = pd.read_csv(file_path)
 
     #Process data
     data_clean= clean_data(data)
 
     # define X
-    X = data_clean.drop(['Case', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome'], axis = 1)
+    X = data_clean.drop(['Case', 'gender', 'histological_type', 'race', 'ethnicity', 'radiation_therapy', 'Grade', 'Mutation.Count', 'Percent.aneuploidy', 'IDH.status', 'outcome'], axis = 1)
+    P17_list = ['Syk_p', 'YAP_pS127_p', 'AR_p', 'ACC1_p', 'YAP_p',
+        'HER3_pY1289_p', 'c-Kit_p', 'ACC_pS79_p', 'STAT3_pY705_p', 'DJ-1_p',
+        '53BP1_p', 'p27_p', 'PDK1_p', 'S6_pS235_S236_p', 'PRDX1_p', 'Bax_p', 'IRS1_p']
 
-    preproc_scaler = joblib.load('scaler.joblib')
+    X_P17 = X[['years_to_birth'] + P17_list]
+
+    scaler_path= os.path.join(os.path.dirname(__file__),'..','models','scaler_20240311-112633.joblib')
+    preproc_scaler = joblib.load(scaler_path)
     # preprocess X_train, X_test and X_val
-    X_pred= preproc_scaler.transform(X)
+    X_pred= preproc_scaler.transform(X_P17)
 
     return X_pred
-
-preprocess_input()
+#X_pred= preprocess_input()
+#print(X_pred)
 
 # preprocess_input()
