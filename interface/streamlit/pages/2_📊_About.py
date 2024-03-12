@@ -1,16 +1,16 @@
-## About.py
+## 2 About.py
+
 import streamlit as st
 import pandas as pd
+import numpy as np
 from PIL import Image
 import plotly.express as px
 import random
 
 
-st.set_page_config(layout="wide", page_icon="📊") # sets layout to wide
-# Main body contents: Output Widgets
-st.title("Proteomomic-based Brain Cancer Prediction")
+st.set_page_config(page_title="About the Dataset", page_icon="📊", layout = "wide")
 
-
+st.title("Proteomic-based Brain Cancer Prediction")
 
 # Read the data
 df = pd.read_csv('brain-proteomics.csv')
@@ -20,7 +20,6 @@ gender_age_outcome.rename(columns={'years_to_birth': 'age'}, inplace=True)
 outcome_mapping = {0: 'Oligodendroglioma', 1: 'Astrocytoma'}
 gender_age_outcome['outcome'] = gender_age_outcome['outcome'].map(outcome_mapping)
 outcome_percentages = gender_age_outcome['outcome'].value_counts(normalize=True) * 100
-
 
 
 items = ["2 types of brain cancer",
@@ -41,14 +40,17 @@ fig1 = px.pie(names=outcome_percentages.index, values=outcome_percentages.values
               labels=outcome_percentages.index)
 
 # Display figure 1
+fig1.update_traces(marker=dict(colors=['red', 'blue']))
 st.plotly_chart(fig1)
+
 
 # Add text between figures
 st.header("Age and gender distribution")
 
 # Plotly figure 2
 fig2 = px.histogram(gender_age_outcome, x="age", color="gender", marginal="box",
-                    hover_data=gender_age_outcome.columns)
+                    hover_data=gender_age_outcome.columns,
+                    color_discrete_map={'female': 'blue', 'male': 'red'})
 
 # Display figure 2
 st.plotly_chart(fig2)
@@ -60,7 +62,7 @@ items2 = ["Statistical comparison bewtween the two cancer types",
         "Including age as a feature / excluding gender"
 ]
 
-st.markdown("## Regarding dimensionality reduction:")
+st.markdown("## To reduce analysis complexity:")
 st.markdown("\n".join([f"- <span style='font-size: 20px'>{item}</span>" for item in items2]), unsafe_allow_html=True)
 
 
@@ -82,7 +84,7 @@ P17_list = ['Syk_p',
  'Bax_p',
  'IRS1_p']
 
-st.header("Examples of the 17 selected proteins")
+st.header("Examples from the 17 selected proteins")
 
 # Select 5 random proteins from the P17_list
 random_proteins = random.sample(P17_list, 5)
@@ -99,17 +101,18 @@ fig3 = px.box(melted_df_random, x='Proteins', y='Protein Levels', color='outcome
              category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']},
              color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'})
 
-# Display figure 1
+# Display figure 3
 st.plotly_chart(fig3)
+
 
 
 items3 = ["18 features (17 selected proteins + age)",
         "Production of synthetic data",
         "Logistic Regression"
 ]
-st.markdown("## About the training dataset:")
+st.markdown("## Final Analysis:")
 st.markdown("\n".join([f"- <span style='font-size: 20px'>{item}</span>" for item in items3]), unsafe_allow_html=True)
 
-
-st.write('Original Dataset found at:')
+st.divider()
+st.write('📊 Original Dataset found at:')
 st.markdown('[https://www.kaggle.com/datasets/leilahasan/brain-cancer-clinical-and-proteomic-data/data](https://www.kaggle.com/datasets/leilahasan/brain-cancer-clinical-and-proteomic-data/data)')

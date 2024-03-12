@@ -3,9 +3,13 @@ import streamlit as st
 from PIL import Image
 
 
-st.set_page_config(page_title="Introduction", page_icon="🧠", layout = "wide")
+## 1 Introduction.py
 
-#st.sidebar.header("Introduction")
+import streamlit as st
+from PIL import Image
+
+
+st.set_page_config(page_title="Introduction", page_icon="🧠", layout = "wide")
 
 st.title('Introduction')
 

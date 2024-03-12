@@ -33,7 +33,8 @@ if data is not None:
 
 if df_upload is not None:
     fig = px.histogram(df_upload, x="years_to_birth",  color="gender", marginal="box",
-                   hover_data=df_upload.columns)
+                   hover_data=df_upload.columns,
+                   color_discrete_map={'female': 'blue', 'male': 'red'})
     st.plotly_chart(fig)
 else:
     st.write('Nothing uploaded yet')
@@ -121,6 +122,7 @@ if st.button('Run prediction for all samples'):
 
         fig.update_yaxes(tickfont=dict(size=14))
         fig.update_xaxes(tickfont=dict(size=14))
+        fig.update_traces(marker=dict(colors=['red', 'blue']))
         fig.update_layout(
             height = 450,
             width = 450,
@@ -159,13 +161,13 @@ if st.button('Run prediction for all samples'):
         c3.subheader("Probability of predicted cancer types")
         fig = px.box(result_df, x = "Prediction", y='Probability',
                      color='Prediction',
+                     color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'}
                      )
                     #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
                     #)
 
         fig.update_yaxes(tickfont=dict(size=12))
         fig.update_xaxes(tickfont=dict(size=12))
-
         fig.update_layout(height=500, width=500)
         st.plotly_chart(fig,height=500, width = 500)
 
