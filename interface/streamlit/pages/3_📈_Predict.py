@@ -18,9 +18,23 @@ st.header("Let's predict based on proteomics data!")
 
 #st.set_option('deprecation.showfileUploaderEncoding', False)
 #@st.cache_data
+st.markdown(
+    """
+    <style>
+    .css-1v3fvcr {
+        font-size: 20px; /* Adjust the font size as needed */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 data=None
-data = st.file_uploader("Upload your data", type="csv")
+st.write('Upload your data')
+data = st.file_uploader("", type="csv")
 df_upload=None
+
+#f"- <span style='font-size: 20px'>{text}</span>", unsafe_allow_html=True
 
 if data is not None:
     df_upload = pd.read_csv(data)
@@ -106,11 +120,11 @@ if st.button('Run prediction for all samples'):
                                           1: "Prediction",
                                           2: "Probability"})
 
-    c1, c2, c3 = st.columns([1.5, 2, 2], gap = "medium")
 
-    with c1:
-        c1.subheader("Table with prediction results")
-        st.write(result_df)
+    st.subheader("Results of prediction")
+    st.write(result_df)
+
+    c2, c3 = st.columns([1,1], gap = "medium")
 
     with c2:
         c2.subheader("Proportion of predicted cancer types")
@@ -166,9 +180,30 @@ if st.button('Run prediction for all samples'):
                     #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
                     #)
 
-        fig.update_yaxes(tickfont=dict(size=12))
-        fig.update_xaxes(tickfont=dict(size=12))
-        fig.update_layout(height=500, width=500)
+        fig.update_yaxes(tickfont=dict(size=14))
+        fig.update_xaxes(tickfont=dict(size=14))
+        #fig.update_traces(marker=dict(colors=['red', 'blue']))
+        fig.update_layout(
+            height = 450,
+            width = 450,
+            #title="Plot Title",
+            xaxis_title=None,
+            yaxis_title="Count",
+            legend_title=None,
+            font=dict(
+                #family="Courier New, monospace",
+                size=14
+                #color="RebeccaPurple"
+                ),
+            legend=dict(
+                font = dict(size = 14),
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="center",
+                x=0.5
+                )
+            )
         st.plotly_chart(fig,height=500, width = 500)
 
 else:
