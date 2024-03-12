@@ -18,7 +18,6 @@ def clean_data (df: pd.DataFrame) -> pd.DataFrame:
     - remove duplicates
     - remove NaNs
     """
-
     df = df.drop_duplicates()
     df = df.dropna(how='any', axis=0)
 
@@ -26,8 +25,6 @@ def clean_data (df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 # Load scaler
-
-
 def load_scaler(path = '~/api/saved_scalers',
                file = 'scaler.gz'
               ):

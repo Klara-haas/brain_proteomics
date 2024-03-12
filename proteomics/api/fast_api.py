@@ -8,8 +8,6 @@ from joblib import dump, load
 from io import BytesIO, StringIO
 import json
 from proteomics.data_preproc.preprocess import load_scaler, preprocess_input, clean_data
-
-# imports for preprocessing and model
 import os
 
 
@@ -24,10 +22,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# Load model up front --> not sure yet if that will work
-# app.state.model = load_model()
-
-
 # Test function to check that api and website can communicate
 @app.post("/predict_uploaded_file_test")
 def predict_uploaded_file_test(file: UploadFile = File(...)):
@@ -36,7 +30,6 @@ def predict_uploaded_file_test(file: UploadFile = File(...)):
     decoded_str = contents.decode('utf-8')
     print(type(decoded_str))
     print(decoded_str)
-    #print("test")
 
     rows = decoded_str.split('\n')
 
@@ -52,7 +45,7 @@ def predict_uploaded_file_test(file: UploadFile = File(...)):
     return results
 
 
-# Run prediction
+# Run prediction for one sample
 @app.post("/predict_uploaded_file")
 def predict_uploaded_file(file: UploadFile = File(...)):
     contents = file.file.read()
@@ -68,16 +61,12 @@ def predict_uploaded_file(file: UploadFile = File(...)):
 
     # Convert the data into a DataFrame
     df = pd.DataFrame(data[1:], columns=data[0])
-    #print(df.head(3))
 
     df = df.drop(columns="Identifier", axis = 1)
-
-    #print(type(df))
     # Preprocess
     X_pred = preprocess_input(df)
 
     # Predict data+
-
     current_path = os.path.dirname(__file__)
     model = load(os.path.join(current_path,'..','models', 'log_reg_model.pkl'))
 
@@ -141,45 +130,3 @@ def predict_several_samples(file: UploadFile = File(...)):
     prediction = {k: v.tolist() for k, v in result_df.iterrows()}
 
     return prediction
-
-
-###############################################################################
-# for some reason this code doesn't work anymore
-# @app.post("/predict_uploaded_file")
-# def predict_uploaded_file(file: UploadFile = File(...)):
-#     contents = file.file.read() # Reading content of 'myfile' in bytes
-#     #print(contents)
-#     decoded_str = contents.decode('utf-8') # Decoding contents into str type
-#     # decoded_str = StringIO(contents.decode('utf-8')) # Alternative using StringIO
-#     df_json = json.loads(decoded_str) # Reading string and converting to json (dictionary)
-#     df = pd.DataFrame(df_json) # Reading dictionary and converting into dataframe
-#     # results = {
-#     #     "value": float(df["Identifier"][0])
-#     #     }
-#     # return results
-
-#     data = df.drop(columns="Identifier")
-
-
-#     # Preprocess
-#     X_pred = preprocess_input(data)
-
-
-#     # Predict data
-#     model = load_model(path ='/home/jana/code/Klara-haas/brain_proteomics_project/brain_proteomics/api/saved_scalers',
-#                         file = 'svc_model.pkl')
-
-#     outcome_num = int(model.predict(X_pred)[0])
-#     if outcome_num == 0:
-#         outcome = "good cancer"
-#         probability = round(float(model.predict_proba(X_pred)[0][0]), 4)
-#     else:
-#         outcome = "bad cancer"
-#         probability = round(float(model.predict_proba(X_pred)[0][1]), 4)
-
-#     return {
-#                 "Outcome": outcome,
-#                 "Probability": probability
-#     }
-import sklearn
-print(sklearn.__version__)
