@@ -44,32 +44,6 @@ def preprocess_proteins_age_gen(X_train, X_val, X_test):
 
     return X_train, X_val, X_test, preprocessor
 
-def preprocess_proteins_all(X_train, X_val, X_test):
-    """
-    - transform cleaned dataset with MinMaxScaler for all lfq-intensities of proteins.
-    - MinMaxScaler for age, years of birth, mutation count.
-    - Oridnal Encoder for gender, radiation therapy, grade, IDH status
-
-    """
-
-    set_config(display = 'diagram')
-
-    preproc_numerical = make_pipeline(MinMaxScaler())
-    preproc_categorical = make_pipeline(
-    OrdinalEncoder()
-    )
-
-    preproc_all = make_column_transformer(
-    (preproc_categorical, ['gender', 'radiation_therapy','Grade', 'IDH.status']),
-    (preproc_numerical, make_column_selector(dtype_include=["int64", "float64"]))
-)
-
-    X_train = preproc_all.fit_transform(X_train)
-    X_val = preproc_all.transform(X_val)
-    X_test= preproc_all.transform(X_test)
-
-    return X_train, X_val, X_test
-
 def synthetic_data_gen_age(X, y) -> np.array:
     """
     - Create training data with SMOTE.
@@ -82,14 +56,3 @@ def synthetic_data_gen_age(X, y) -> np.array:
     print (f"✅ synthetic data created on training set. Size of new training set: {X_train.shape}")
 
     return X_train, y_train
-
-def preproc_input(X, preproc_base):
-    """
-    - transform cleaned dataset with MinMaxScaler for all lfq-intensities of proteins.
-    - MinMaxScaler for age
-    - Oridnal Encoder for gender
-    - pipeline fit in preprocess_proteins_age_gen()
-    """
-
-    X_predict = preproc_base.transform(X)
-    return X_predict

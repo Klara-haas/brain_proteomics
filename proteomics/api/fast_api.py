@@ -1,13 +1,11 @@
 import pandas as pd
 import numpy as np
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile
 from joblib import dump, load
 from io import BytesIO, StringIO
 import json
-from proteomics.data_preproc.preprocess import load_scaler, preprocess_input, clean_data
+from proteomics.api.preproc_input import preprocess_input
 import os
 
 
@@ -21,38 +19,14 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
-
-# Test function to check that api and website can communicate
-@app.post("/predict_uploaded_file_test")
-def predict_uploaded_file_test(file: UploadFile = File(...)):
-    contents = file.file.read()
-    print(type(contents))
-    decoded_str = contents.decode('utf-8')
-    print(type(decoded_str))
-    print(decoded_str)
-
-    rows = decoded_str.split('\n')
-
-    # Split each row into columns
-    data = [row.split(',') for row in rows]
-
-    # Convert the data into a DataFrame
-    df = pd.DataFrame(data[1:], columns=data[0])
-
-    results = {
-        'first value': float(df["Identifier"][0])
-        }
-    return results
-
-
 # Run prediction for one sample
 @app.post("/predict_uploaded_file")
 def predict_uploaded_file(file: UploadFile = File(...)):
     contents = file.file.read()
-    print(type(contents))
+    #print(type(contents))
     decoded_str = contents.decode('utf-8')
-    print(type(decoded_str))
-    print(decoded_str)
+    #print(type(decoded_str))
+    #print(decoded_str)
 
     rows = decoded_str.split('\n')
 
@@ -91,10 +65,10 @@ def root():
 @app.post("/predict_several_samples")
 def predict_several_samples(file: UploadFile = File(...)):
     contents = file.file.read()
-    print(type(contents))
+    #print(type(contents))
     decoded_str = contents.decode('utf-8')
-    print(type(decoded_str))
-    print(decoded_str)
+    #print(type(decoded_str))
+    #print(decoded_str)
 
     rows = decoded_str.split('\n')
 
@@ -103,7 +77,6 @@ def predict_several_samples(file: UploadFile = File(...)):
 
     # Convert the data into a DataFrame
     df_upload = pd.DataFrame(data[1:], columns=data[0])
-    print(df_upload.head(3))
 
     df = df_upload.drop(columns="Identifier", axis = 1)
 
