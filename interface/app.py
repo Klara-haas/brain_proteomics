@@ -130,8 +130,8 @@ st.markdown('''
 if st.button('Run prediction for all samples'):
     # print is visible in the server output, not in the page
 
-    base_url = 'http://127.0.0.1:8000'
-    #base_url = "https://brainproteomics-hnkdsog4wq-ew.a.run.app"
+    #base_url = 'http://127.0.0.1:8000'
+    base_url = "https://brainproteomics-hnkdsog4wq-ew.a.run.app"
     endpoint = 'predict_several_samples'
     brainproteomics_api_url = f'{base_url}/{endpoint}'
     response = requests.post(brainproteomics_api_url, files={"file": data})
