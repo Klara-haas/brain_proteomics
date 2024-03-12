@@ -1,7 +1,7 @@
 ## introduction.py
 import streamlit as st
 from PIL import Image
-
+import os
 
 ## 1 Introduction.py
 
@@ -24,7 +24,10 @@ with col2:
              They occur in **glial** cells: the cells that surround and support neurons. \n
              A variety of glial cells are found in the nervous system.""")
 
-image1 = Image.open('images/750px-Blausen_0870_TypesofNeuroglia.png')
+path = os.path.dirname(__file__)
+image_path = os.path.join(path,"images","750px-Blausen_0870_TypesofNeuroglia.png")
+print(image_path)
+image1 = Image.open(image_path)
 st.image(image1)
 
 st.markdown('## The Problem')
