@@ -6,6 +6,7 @@ import numpy as np
 from PIL import Image
 import plotly.express as px
 import random
+import os
 
 
 st.set_page_config(page_title="About the Dataset", page_icon="📊", layout = "wide")
@@ -13,7 +14,9 @@ st.set_page_config(page_title="About the Dataset", page_icon="📊", layout = "w
 st.title("Proteomic-based Brain Cancer Prediction")
 
 # Read the data
-df = pd.read_csv('brain-proteomics.csv')
+path = os.path.dirname(__file__)
+df_path = os.path.join(path,"..","brain-proteomics.csv")
+df = pd.read_csv(df_path)
 
 gender_age_outcome = df[['years_to_birth', 'gender', 'outcome']]
 gender_age_outcome.rename(columns={'years_to_birth': 'age'}, inplace=True)
