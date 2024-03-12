@@ -26,7 +26,7 @@ with col2:
 
 path = os.path.dirname(__file__)
 image1_path = os.path.join(path,"..", "images","750px-Blausen_0870_TypesofNeuroglia.png")
-#print(image_path)
+print("findme2", image1_path)
 image1 = Image.open(image1_path)
 st.image(image1)
 

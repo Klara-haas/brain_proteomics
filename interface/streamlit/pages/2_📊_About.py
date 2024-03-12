@@ -16,6 +16,7 @@ st.title("Proteomic-based Brain Cancer Prediction")
 # Read the data
 path = os.path.dirname(__file__)
 df_path = os.path.join(path,"..","brain-proteomics.csv")
+#print("findme", df_path)
 df = pd.read_csv(df_path)
 
 gender_age_outcome = df[['years_to_birth', 'gender', 'outcome']]
