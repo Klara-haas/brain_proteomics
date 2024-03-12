@@ -25,9 +25,9 @@ with col2:
              A variety of glial cells are found in the nervous system.""")
 
 path = os.path.dirname(__file__)
-image_path = os.path.join(path,"images","750px-Blausen_0870_TypesofNeuroglia.png")
-print(image_path)
-image1 = Image.open(image_path)
+image1_path = os.path.join(path,"..", "images","750px-Blausen_0870_TypesofNeuroglia.png")
+#print(image_path)
+image1 = Image.open(image1_path)
 st.image(image1)
 
 st.markdown('## The Problem')
@@ -44,5 +44,7 @@ st.markdown("""
 
 st.header("Oligodendroglioma or Astrocytoma?")
 
-image2 = Image.open('images/41374_2003_Article_BF3780627_Fig1_HTML.jpg')
+image2_path = os.path.join(path,"..", "images","41374_2003_Article_BF3780627_Fig1_HTML.jpg")
+
+image2 = Image.open(image2_path)
 st.image(image2, caption='Histopathologic Classification of Gliomas', use_column_width=False)
