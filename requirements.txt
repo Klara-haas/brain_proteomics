@@ -1,18 +1,18 @@
 #wheel
 nbresult
 #colorama
-ipdb
-ipykernel
+#ipdb
+#ipykernel
 yapf
-matplotlib
+#matplotlib
 plotly
 #pygeohash
-pytest
+#pytest
 #seaborn
 numpy==1.23.5
 pandas==1.5.3
 #scipy==1.10.0
-scikit-learn==1.3.1
+#scikit-learn==1.3.1
 #google-cloud-bigquery
 #google-cloud-storage
 db-dtypes
@@ -29,7 +29,7 @@ pyarrow
 python-multipart==0.0.9
 python-dotenv
 
-psycopg2-binary
+#psycopg2-binary
 
 # API
 fastapi==0.108.0
@@ -39,4 +39,4 @@ streamlit
 
 # tests
 ##httpx
-pytest-asyncio
+#pytest-asyncio
