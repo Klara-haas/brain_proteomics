@@ -16,7 +16,7 @@ st.title('Introduction')
 st.write("")
 st.write("")
 
-col1, col2 = st.columns([2, 2])
+col1, col2 = st.columns([1.5, 2.5])
 
 with col1:
     st.header("Glial cells and Gliomas")
@@ -78,7 +78,7 @@ st.write("")
 st.write("")
 st.write("")
 
-col5, col6 = st.columns([2, 2], gap = "large")
+col5, col6 = st.columns([1.5, 2.5], gap = "large")
 
 with col6:
     image2_path = os.path.join(path,"..", "images","brain_proteomics_Wingo_et_al_2019.png")
