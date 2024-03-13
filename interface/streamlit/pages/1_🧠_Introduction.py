@@ -38,7 +38,7 @@ with col1:
                     "Astrocytoma",
                     "Glioblastoma"
                         ]
-        st.markdown("\n".join([f"- <span style='font-size: 22px'>{item}</span>" for item in intro_items12]), unsafe_allow_html=True)
+        st.markdown("\n".join([f"- <span style='font-size: 20px'>{item}</span>" for item in intro_items12]), unsafe_allow_html=True)
 
 
 with col2:
