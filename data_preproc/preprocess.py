@@ -145,4 +145,3 @@ def preprocess_data():
     print("✅ Preprocess done of proteins, age and gender \n")
 
     return X_train, y_train, X_val, y_val, X_test, y_test, preproc_base
-
