@@ -123,13 +123,19 @@ if st.button('Run prediction for all samples'):
 
 
     st.subheader("Results of prediction")
-    st.write(result_df)
+    st.write("")
+    ca, cb = st.columns([2,2])
+    with ca:
+        st.dataframe(result_df, use_container_width=True)
 
+    st.write("")
 
     c2, c3 = st.columns([1,1], gap = "medium")
 
     with c2:
         c2.subheader("Proportion of predicted cancer types")
+        st.write("")
+
         tmp = pd.DataFrame(result_df[["Prediction"]].value_counts())
         fig = px.pie(tmp,
                      values=  result_df["Prediction"].value_counts().values,
@@ -178,6 +184,8 @@ if st.button('Run prediction for all samples'):
 
     with c3:
         c3.subheader("Probability of predicted cancer types")
+        st.write("")
+
         fig = px.box(result_df, x = "Prediction", y='Probability',
                      color='Prediction',
                      color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'}
