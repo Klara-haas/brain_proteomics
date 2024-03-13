@@ -16,7 +16,7 @@ st.title('Introduction')
 st.write("")
 st.write("")
 
-col1, col2 = st.columns([1.6, 3])
+col1, col2 = st.columns([2, 2])
 
 with col1:
     st.header("Glial cells and Gliomas")
@@ -54,7 +54,7 @@ st.write("")
 st.write("")
 st.write("")
 
-col3, col4 = st.columns([1.2, 2], gap = "large")
+col3, col4 = st.columns([2, 2], gap = "large")
 
 with col3:
     image2_path = os.path.join(path,"..", "images","41374_2003_Article_BF3780627_Fig1_HTML.jpg")
@@ -78,7 +78,7 @@ st.write("")
 st.write("")
 st.write("")
 
-col5, col6 = st.columns([1.8, 3], gap = "large")
+col5, col6 = st.columns([2, 2], gap = "large")
 
 with col6:
     image2_path = os.path.join(path,"..", "images","brain_proteomics_Wingo_et_al_2019.png")
