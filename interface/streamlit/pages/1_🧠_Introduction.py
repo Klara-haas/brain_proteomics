@@ -46,7 +46,7 @@ with col2:
     image1_path = os.path.join(path,"..", "images","750px-Blausen_0870_TypesofNeuroglia_marked_red.png")
     #print("findme2", image1_path)
     image1 = Image.open(image1_path)
-    st.image(image1)
+    st.image(image1, use_column_width=True)
 
 
 st.write("")
@@ -54,13 +54,13 @@ st.write("")
 st.write("")
 st.write("")
 
-col3, col4 = st.columns([1.2, 2])
+col3, col4 = st.columns([1.2, 2], gap = "large")
 
 with col3:
     image2_path = os.path.join(path,"..", "images","41374_2003_Article_BF3780627_Fig1_HTML.jpg")
 
     image2 = Image.open(image2_path)
-    st.image(image2, caption='Histopathologic Classification of Gliomas', use_column_width=False)
+    st.image(image2, caption='Histopathologic Classification of Gliomas', use_column_width=True)
 
 with col4:
     st.header("The Problem")
@@ -75,14 +75,16 @@ with col4:
 
 st.write("")
 st.write("")
+st.write("")
+st.write("")
 
-col5, col6 = st.columns([1.8, 3])
+col5, col6 = st.columns([1.8, 3], gap = "large")
 
 with col6:
-    image2_path = os.path.join(path,"..", "images","41374_2003_Article_BF3780627_Fig1_HTML.jpg")
+    image2_path = os.path.join(path,"..", "images","brain_proteomics_Wingo_et_al_2019.png")
 
     image2 = Image.open(image2_path)
-    st.image(image2, caption='Histopathologic Classification of Gliomas', use_column_width=False)
+    st.image(image2, use_column_width=True)
 
 with col5:
     st.header("The Solution")
