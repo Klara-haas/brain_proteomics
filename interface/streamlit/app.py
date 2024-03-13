@@ -8,6 +8,8 @@ import plotly.express as px
 
 st.set_page_config(page_title="Proteomics Data for Earlier Brain Cancer Detection", page_icon="🧬", layout = "wide")
 
+st.sidebar.title("Welcome")
+
 st.title('Using Machine Learning with Proteomics Data for Earlier Brain Cancer Detection')
 
 st.write("""
