@@ -22,10 +22,6 @@ def preprocess_input(data) -> np.array:
 
     print(" Preprocess input proteins, age and gender... ")
 
-    # Retrieve data
-    file_path=os.path.join(os.path.dirname(__file__), '..','raw_data','brain_proteomics_data_input.csv')
-    data = pd.read_csv(file_path)
-
     #Process data
     data_clean= clean_data(data)
 
