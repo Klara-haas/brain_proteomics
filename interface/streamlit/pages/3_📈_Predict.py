@@ -125,19 +125,23 @@ if st.button('Run prediction for all samples'):
     st.subheader("Results of prediction")
     st.write(result_df)
 
+
     c2, c3 = st.columns([1,1], gap = "medium")
 
     with c2:
         c2.subheader("Proportion of predicted cancer types")
-        fig = px.pie(result_df,
-                     values=result_df["Prediction"].value_counts().values,
-                     names=result_df["Prediction"].unique()#,
-                     #color=result_df["Prediction"].unique()
+        tmp = pd.DataFrame(result_df[["Prediction"]].value_counts())
+        fig = px.pie(tmp,
+                     values=  result_df["Prediction"].value_counts().values,
+                     names = result_df["Prediction"].sort_values().unique(),
+                     color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'}
+                     #color=result_df["Prediction"].unique().sort()
                      )
 
         fig.update_yaxes(tickfont=dict(size=14))
         fig.update_xaxes(tickfont=dict(size=14))
         fig.update_traces(marker=dict(colors=['red', 'blue']))
+
         fig.update_layout(
             height = 450,
             width = 450,
@@ -189,7 +193,7 @@ if st.button('Run prediction for all samples'):
             width = 450,
             #title="Plot Title",
             xaxis_title=None,
-            yaxis_title="Count",
+            yaxis_title="Probability",
             legend_title=None,
             font=dict(
                 #family="Courier New, monospace",
