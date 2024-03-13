@@ -48,7 +48,7 @@ if data is not None:
 if df_upload is not None:
     fig = px.histogram(df_upload, x="years_to_birth",  color="gender", marginal="box",
                    hover_data=df_upload.columns,
-                   color_discrete_map={'female': 'blue', 'male': 'red'})
+                   color_discrete_map={'female': '#81689D', 'male': '#FFD0EC'})
     st.plotly_chart(fig)
 else:
     st.write('Nothing uploaded yet')
@@ -140,13 +140,13 @@ if st.button('Run prediction for all samples'):
         fig = px.pie(tmp,
                      values=  result_df["Prediction"].value_counts().values,
                      names = result_df["Prediction"].sort_values().unique(),
-                     color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'}
+                     color_discrete_map={'Oligodendroglioma': '#265073', 'Astrocytoma': '#2D9596'}
                      #color=result_df["Prediction"].unique().sort()
                      )
 
         fig.update_yaxes(tickfont=dict(size=14))
         fig.update_xaxes(tickfont=dict(size=14))
-        fig.update_traces(marker=dict(colors=['red', 'blue']))
+        fig.update_traces(marker=dict(colors=['#265073', '#2D9596']))
 
         fig.update_layout(
             height = 450,
@@ -188,7 +188,7 @@ if st.button('Run prediction for all samples'):
 
         fig = px.box(result_df, x = "Prediction", y='Probability',
                      color='Prediction',
-                     color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'}
+                     color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'}
                      )
                     #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
                     #)
