@@ -9,13 +9,14 @@ import os
 
 st.set_page_config(page_title="Proteomics Data for Earlier Brain Cancer Detection", page_icon="🧬", layout = "wide")
 
-st.title('Predicting Brain Cancer with Proteomics')
 
-st.write("")
+#st.title('Predicting Brain Cancer with Proteomics')
+
+#st.write("")
 
 path = os.path.dirname(__file__)
-#image_path = os.path.join(path,"images","eyewire.jpg")
-image_path = os.path.join(path,"images","Using Machine Learning and Proteomics Data for earlier Brain Cancer detection.jpg")
+image_path = os.path.join(path,"images","eyewire_title.jpg")
+#image_path = os.path.join(path,"images","Using Machine Learning and Proteomics Data for earlier Brain Cancer detection.jpg")
 image = Image.open(image_path)
 st.image(image)
 
