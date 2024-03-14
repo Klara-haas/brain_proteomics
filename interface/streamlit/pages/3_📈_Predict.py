@@ -150,39 +150,39 @@ if st.button('Run prediction'):
 
     # Boxplot of probabilities
     # with c2:
-    st.subheader("Probability of predicted cancer types")
-    st.write("")
+    # st.subheader("Probability of predicted cancer types")
+    # st.write("")
 
-    fig = px.box(result_df, x = "Prediction", y='Probability', points = "outliers",
-                    color='Prediction',
-                    color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'}
-                    )
-                #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
-                #)
+    # fig = px.box(result_df, x = "Prediction", y='Probability', points = "outliers",
+    #                 color='Prediction',
+    #                 color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'}
+    #                 )
+    #             #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
+    #             #)
 
-    fig.update_yaxes(tickfont=dict(size=20))
-    fig.update_xaxes(tickfont=dict(size=20))
-    #fig.update_traces(marker=dict(colors=['red', 'blue']))
-    fig.update_layout(
-        height = 450,
-        width = 450,
-        #title="Plot Title",
-        xaxis_title=None,
-        yaxis_title="Probability",
-        yaxis = dict(title_font = dict(size = 20)),
-        yaxis_range=[0,1],
-        legend_title=None,
-        font=dict(size=18),
-        legend=dict(
-            font = dict(size = 20),
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="center",
-            x=0.5
-            )
-        )
-    st.plotly_chart(fig,height=500, width = 500)
+    # fig.update_yaxes(tickfont=dict(size=20))
+    # fig.update_xaxes(tickfont=dict(size=20))
+    # #fig.update_traces(marker=dict(colors=['red', 'blue']))
+    # fig.update_layout(
+    #     height = 450,
+    #     width = 450,
+    #     #title="Plot Title",
+    #     xaxis_title=None,
+    #     yaxis_title="Probability",
+    #     yaxis = dict(title_font = dict(size = 20)),
+    #     yaxis_range=[0,1],
+    #     legend_title=None,
+    #     font=dict(size=18),
+    #     legend=dict(
+    #         font = dict(size = 20),
+    #         orientation="h",
+    #         yanchor="bottom",
+    #         y=1.02,
+    #         xanchor="center",
+    #         x=0.5
+    #         )
+    #     )
+    # st.plotly_chart(fig,height=500, width = 500)
 
     ###### Last Page ###############################################################
     st.write("")
