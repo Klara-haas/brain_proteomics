@@ -80,18 +80,27 @@ with tabs[1]:
 
         st.write("")
 
-        intro_items1 = ["Difficult classification with imaging",
+        intro_items2 = ["Difficult classification:",
 
-                        "Requires histological examination / biopsy",
-                        "High variability between different cancer types"
+                        #"Requires histological examination",
+                        #"Invasive: brain surgery is needed",
+                        #"High variability between different cancer types"
                     ]
-        st.markdown("\n".join([f"- <span style='font-size: 22px'>{item}</span>" for item in intro_items1]), unsafe_allow_html=True)
+        st.markdown("\n".join([f"- <span style='font-size: 22px'>{item}</span>" for item in intro_items2]), unsafe_allow_html=True)
 
+    with col4:
+        colc, cold = st.columns([0.2, 2])
+        with cold:
+            intro_items21 = [
+                        "MRI is expensive & can't distinguish cancer types",
+                        "Histological examination requires biopsy (highly invasive)",
+                            ]
+            st.markdown("\n".join([f"- <span style='font-size: 22px'>{item}</span>" for item in intro_items21]), unsafe_allow_html=True)
 
 
 ##### The Solution #############################################################
 with tabs[2]:
-    col5, col6 = st.columns([1.5, 2.5], gap = "large")
+    col5, col6 = st.columns([2,3], gap = "small")
 
     with col6:
         st.write("")
@@ -110,7 +119,7 @@ with tabs[2]:
 
         intro_items1 = [
             "Measure proteins in the blood (less invasive)",
-            "Use machine learning"
+            "Use machine learning to understand protein patterns",
             "Faster diagnosis",
             "More targeted treatment",
             "Better patient outcomes"

@@ -14,7 +14,7 @@ st.set_page_config(page_title="Model & Prediction", page_icon="📈", layout = "
 
 st.title("Model & Prediction")
 
-st.header("Let's predict based on proteomics data!")
+st.header("Let's predict with machine learning and proteomics data!")
 
 #st.set_option('deprecation.showfileUploaderEncoding', False)
 #@st.cache_data
@@ -115,9 +115,9 @@ else:
 ############# RUN PREDICTION FOR SEVERAL SAMPLE ################################
 
 st.markdown('''
-### Predict the type of cancer for all your uploaded samples:
+### Predict the type of cancer for all samples:
 ''')
-if st.button('Run prediction for all samples'):
+if st.button('Run prediction'):
     data.seek(0)
 
     #base_url = 'http://127.0.0.1:8000' #local

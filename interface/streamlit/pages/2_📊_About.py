@@ -195,12 +195,15 @@ fig3.update_layout(
 # Display figure 3
 st.plotly_chart(fig3)
 
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.write("")
 
-
-items3 = ["18 features (17 selected proteins + age)",
-        #"Production of synthetic data",
-        "Logistic Regression"
-]
+items3 = ["Machine learning",
+          "18 features (17 selected proteins + age)"
+          ]
 st.markdown("## Final Analysis:")
 st.markdown("\n".join([f"- <span style='font-size: 20px'>{item}</span>" for item in items3]), unsafe_allow_html=True)
 
