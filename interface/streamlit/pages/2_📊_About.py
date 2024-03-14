@@ -141,13 +141,28 @@ fig3 = px.box(melted_df_random, x='Proteins', y='Protein Levels', color='outcome
              category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']},
              color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'})
 
+fig3.update_layout(
+    #title="Plot Title",
+    xaxis_title="Proteins",
+    yaxis_title="Protein Levels",
+    xaxis = dict(title_font = dict(size = 16),
+                 tickfont = dict(size = 14)),
+    yaxis = dict(title_font = dict(size = 16),
+                 tickfont = dict(size = 16)),
+    legend_title= None,
+    font=dict(size=14),
+    legend=dict(
+        font = dict(size = 16)
+        )
+)
+
 # Display figure 3
 st.plotly_chart(fig3)
 
 
 
 items3 = ["18 features (17 selected proteins + age)",
-        "Production of synthetic data",
+        #"Production of synthetic data",
         "Logistic Regression"
 ]
 st.markdown("## Final Analysis:")
