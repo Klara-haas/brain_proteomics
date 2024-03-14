@@ -49,6 +49,20 @@ if df_upload is not None:
     fig = px.histogram(df_upload, x="years_to_birth",  color="gender", marginal="box",
                    hover_data=df_upload.columns,
                    color_discrete_map={'female': '#81689D', 'male': '#FFD0EC'})
+    fig.update_layout(
+            xaxis_title="Years to birth",
+            yaxis_title="Count",
+            legend_title="Gender",
+            xaxis = dict(title_font = dict(size = 16),
+                         tickfont = dict(size = 16)),
+            yaxis = dict(title_font = dict(size = 16),
+                         tickfont = dict(size = 16)),
+            legend=dict(
+                font = dict(size = 14),
+                title_font = dict(size = 16)
+                )
+            )
+
     st.plotly_chart(fig)
 else:
     st.write('Nothing uploaded yet')
@@ -144,8 +158,6 @@ if st.button('Run prediction for all samples'):
                      #color=result_df["Prediction"].unique().sort()
                      )
 
-        fig.update_yaxes(tickfont=dict(size=14))
-        fig.update_xaxes(tickfont=dict(size=14))
         fig.update_traces(marker=dict(colors=['#265073', '#2D9596']))
 
         fig.update_layout(
@@ -153,15 +165,14 @@ if st.button('Run prediction for all samples'):
             width = 450,
             #title="Plot Title",
             xaxis_title=None,
-            yaxis_title="Count",
+            xaxis = dict(title_font = dict(size = 16),
+                         tickfont = dict(size = 16)),
+            yaxis = dict(title_font = dict(size = 16),
+                         tickfont = dict(size = 16)),
+            font=dict(size=14),
             legend_title=None,
-            font=dict(
-                #family="Courier New, monospace",
-                size=14
-                #color="RebeccaPurple"
-                ),
             legend=dict(
-                font = dict(size = 14),
+                font = dict(size = 16),
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -170,17 +181,8 @@ if st.button('Run prediction for all samples'):
                 )
             )
 
-        #fig.update_layout(height=500, width=450)
         st.plotly_chart(fig,height=500, width = 450)
 
-
-        # with c2:
-        # c2.subheader("Proportion of predicted cancer types")
-        # fig = px.bar(result_df,
-        #              values=result_df["Prediction"].value_counts().values,
-        #              names=result_df["Prediction"].unique()
-        #              )
-        # st.plotly_chart(fig)
 
     with c3:
         c3.subheader("Probability of predicted cancer types")
@@ -203,14 +205,9 @@ if st.button('Run prediction for all samples'):
             xaxis_title=None,
             yaxis_title="Probability",
             yaxis = dict(title_font = dict(size = 16)),
-            #yaxes = title_font=dict(size=12))
             yaxis_range=[0,1],
             legend_title=None,
-            font=dict(
-                #family="Courier New, monospace",
-                size=14
-                #color="RebeccaPurple"
-                ),
+            font=dict(size=14),
             legend=dict(
                 font = dict(size = 16),
                 orientation="h",

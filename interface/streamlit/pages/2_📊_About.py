@@ -43,9 +43,29 @@ fig1 = px.pie(names=outcome_percentages.index, values=outcome_percentages.values
               #title='Distribution of the two different outcomes',
               labels=outcome_percentages.index)
 
-# Display figure 1
+fig1.update_layout(
+            height = 450,
+            width = 450,
+            xaxis_title=None,
+            xaxis = dict(title_font = dict(size = 16),
+                         tickfont = dict(size = 16)),
+            yaxis = dict(title_font = dict(size = 16),
+                         tickfont = dict(size = 16)),
+            font=dict(size=14),
+            legend_title=None,
+            legend=dict(
+                font = dict(size = 16),
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="center",
+                x=0.5
+                )
+            )
+
 fig1.update_traces(marker=dict(colors=['#265073', '#2D9596']))
-#fig1.update_traces(marker=dict(colors=['red', 'blue']))
+
+# Display figure 1
 st.plotly_chart(fig1)
 
 
@@ -57,6 +77,20 @@ st.header("Age and gender distribution")
 fig2 = px.histogram(gender_age_outcome, x="age", color="gender", marginal="box",
                     hover_data=gender_age_outcome.columns,
                     color_discrete_map={'female': '#81689D', 'male': '#FFD0EC'})
+
+fig2.update_layout(
+            xaxis_title="Years to birth",
+            yaxis_title="Count",
+            legend_title="Gender",
+            xaxis = dict(title_font = dict(size = 16),
+                         tickfont = dict(size = 16)),
+            yaxis = dict(title_font = dict(size = 16),
+                         tickfont = dict(size = 16)),
+            legend=dict(
+                font = dict(size = 14),
+                title_font = dict(size = 16)
+                )
+            )
 
 # Display figure 2
 st.plotly_chart(fig2)
