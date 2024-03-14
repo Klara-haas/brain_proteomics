@@ -10,7 +10,7 @@ import os
 st.set_page_config(page_title="Proteomics Data for Earlier Brain Cancer Detection", page_icon="🧬", layout = "wide")
 
 
-#st.title('Predicting Brain Cancer with Proteomics')
+#st.title('Predicting Brain Cancer using Machine Learning')
 
 #st.write("")
 

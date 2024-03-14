@@ -16,6 +16,7 @@ st.title('Introduction')
 st.write("")
 st.write("")
 
+##### Glial cells and Gliomas ##################################################
 col1, col2 = st.columns([1.5, 2.5])
 
 with col1:
@@ -25,8 +26,8 @@ with col1:
 
     intro_items1 = ["Glial cells: support neurons in the brain",
                 "Gliomas: glial tumors",
-                "Most common type of malignant brain tumors",
-                "Classification according to histological criteria into:"
+                "80% of malignant brain tumors",
+                "Classification based on affected cell type"
                 ]
     st.markdown("\n".join([f"- <span style='font-size: 22px'>{item}</span>" for item in intro_items1]), unsafe_allow_html=True)
 
@@ -34,11 +35,15 @@ with col1:
     cola, colb = st.columns([0.2, 2])
     with colb:
         intro_items12 = [ "Oligodendroglioma",
-                    "Oligoastrocytoma",
-                    "Astrocytoma",
-                    "Glioblastoma"
+                    "Astrocytoma (more aggressive)"
                         ]
         st.markdown("\n".join([f"- <span style='font-size: 20px'>{item}</span>" for item in intro_items12]), unsafe_allow_html=True)
+
+with col1:
+    intro_items2 = [
+                    "Require different treatments"
+                    ]
+    st.markdown("\n".join([f"- <span style='font-size: 22px'>{item}</span>" for item in intro_items2]), unsafe_allow_html=True)
 
 
 with col2:
@@ -53,6 +58,14 @@ st.write("")
 st.write("")
 st.write("")
 st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+
+##### The Problem ##############################################################
 
 col3, col4 = st.columns([2, 2], gap = "large")
 
@@ -67,7 +80,8 @@ with col4:
 
     st.write("")
 
-    intro_items1 = ["Difficult classification",
+    intro_items1 = ["Difficult classification with imaging",
+
                     "Requires histological examination / biopsy",
                     "High variability between different cancer types"
                 ]
@@ -77,6 +91,14 @@ st.write("")
 st.write("")
 st.write("")
 st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+
+##### The Solution #############################################################
 
 col5, col6 = st.columns([1.5, 2.5], gap = "large")
 
@@ -91,9 +113,11 @@ with col5:
 
     st.write("")
 
-    intro_items1 = ["Proteins as key players in early detection!",
-                    "Faster diagnosis",
-                    "More targeted treatment",
-                    "Better patient outcomes"
-                ]
+    intro_items1 = [
+        "Measure proteins in the blood (less invasive)",
+        "Use machine learning"
+        "Faster diagnosis",
+        "More targeted treatment",
+        "Better patient outcomes"
+        ]
     st.markdown("\n".join([f"- <span style='font-size: 22px'>{item}</span>" for item in intro_items1]), unsafe_allow_html=True)

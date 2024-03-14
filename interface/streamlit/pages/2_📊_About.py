@@ -11,7 +11,7 @@ import os
 
 st.set_page_config(page_title="About the Dataset", page_icon="📊", layout = "wide")
 
-st.title("Proteomic-based Brain Cancer Prediction")
+st.title("About the dataset")
 
 # Read the data
 path = os.path.dirname(__file__)
@@ -27,83 +27,114 @@ outcome_percentages = gender_age_outcome['outcome'].value_counts(normalize=True)
 
 
 items = ["2 types of brain cancer",
-        "305 samples",
-        "176 proteins + age + gender (features)"
+        "~ 300 samples",
+        "176 proteins (features)"
 ]
 
 # Display the list as bulletpoints using Markdown
-st.markdown("## About the dataset:")
+st.write("")
 st.markdown("\n".join([f"- <span style='font-size: 20px'>{item}</span>" for item in items]), unsafe_allow_html=True)
+st.write("")
+st.write("")
 
+# Plots about the dataset next to eachother
+c1, c2 = st.columns([1.5,2.5], gap = "large")
 
-
-st.header("How many datapoints per cancer type?")
-# Plotly figure 1
-fig1 = px.pie(names=outcome_percentages.index, values=outcome_percentages.values,
-              #title='Distribution of the two different outcomes',
-              labels=outcome_percentages.index)
-
-fig1.update_layout(
-            height = 450,
-            width = 450,
-            xaxis_title=None,
-            xaxis = dict(title_font = dict(size = 16),
-                         tickfont = dict(size = 16)),
-            yaxis = dict(title_font = dict(size = 16),
-                         tickfont = dict(size = 16)),
-            font=dict(size=14),
-            legend_title=None,
-            legend=dict(
-                font = dict(size = 16),
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="center",
-                x=0.5
+with c1:
+    # Plotly figure 1
+    fig1 = px.pie(names=outcome_percentages.index, values=outcome_percentages.values,
+                #title='Proportion of cancer type',
+                labels=outcome_percentages.index)
+    fig1.update_layout(title_font = dict(size = 25))
+    fig1.update_layout(
+                title={
+                        'text': "Proportion of cancer type",
+                        #'title_font' : dict(size = 25),
+                        'y':1.0,
+                        'x':0.5,
+                        'xanchor': 'center',
+                        'yanchor': 'top'},
+                height = 450,
+                width = 450,
+                xaxis_title=None,
+                xaxis = dict(title_font = dict(size = 16),
+                            tickfont = dict(size = 16)),
+                yaxis = dict(title_font = dict(size = 16),
+                            tickfont = dict(size = 16)),
+                font=dict(size=14),
+                legend_title=None,
+                legend=dict(
+                    font = dict(size = 16),
+                    orientation="h",
+                    yanchor="bottom",
+                    y=-0.2,
+                    xanchor="center",
+                    x=0.5
+                    )
                 )
-            )
 
-fig1.update_traces(marker=dict(colors=['#265073', '#2D9596']))
+    fig1.update_traces(marker=dict(colors=['#265073', '#2D9596']))
 
-# Display figure 1
-st.plotly_chart(fig1)
-
+    # Display figure 1
+    st.plotly_chart(fig1, height=450, width = 450)
 
 
-# Add text between figures
-st.header("Age and gender distribution")
+with c2:
+    # Add text between figures
+    #st.subheader("Age and gender distribution")
 
-# Plotly figure 2
-fig2 = px.histogram(gender_age_outcome, x="age", color="gender", marginal="box",
-                    hover_data=gender_age_outcome.columns,
-                    color_discrete_map={'female': '#81689D', 'male': '#FFD0EC'})
+    # Plotly figure 2
+    fig2 = px.histogram(gender_age_outcome, x="age", color="gender", marginal="box",
+                        hover_data=gender_age_outcome.columns,
+                        color_discrete_map={'female': '#81689D', 'male': '#FFD0EC'})
 
-fig2.update_layout(
-            xaxis_title="Years to birth",
-            yaxis_title="Count",
-            legend_title="Gender",
-            xaxis = dict(title_font = dict(size = 16),
-                         tickfont = dict(size = 16)),
-            yaxis = dict(title_font = dict(size = 16),
-                         tickfont = dict(size = 16)),
-            legend=dict(
-                font = dict(size = 14),
-                title_font = dict(size = 16)
+    fig2.update_layout(title_font = dict(size = 25))
+
+    fig2.update_layout(
+                title={
+                        'text': "Age and gender distribution",
+                        #'title_font' : dict(size = 25),
+                        'y':1.0,
+                        'x':0.5,
+                        'xanchor': 'center',
+                        'yanchor': 'top'},
+                height = 450,
+                width = 700,
+                xaxis_title="Years to birth",
+                yaxis_title="Count",
+                legend_title="Gender",
+                xaxis = dict(title_font = dict(size = 16),
+                            tickfont = dict(size = 16)),
+                yaxis = dict(title_font = dict(size = 16),
+                            tickfont = dict(size = 16)),
+                legend=dict(
+                    font = dict(size = 14),
+                    title_font = dict(size = 16)
+                    )
                 )
-            )
 
-# Display figure 2
-st.plotly_chart(fig2)
+    # Display figure 2
+    st.plotly_chart(fig2, height=450, width = 700)
+
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.write("")
 
 
 # Add text between figures
 items2 = ["Statistical comparison between the two cancer types",
-        "17 significantly different proteins",
-        "Including age as a feature / excluding gender"
+        "17 significantly different proteins"#,
+        #"Including age as a feature / excluding gender"
 ]
 
-st.markdown("## To reduce analysis complexity:")
+st.header("To reduce analysis complexity:")
 st.markdown("\n".join([f"- <span style='font-size: 20px'>{item}</span>" for item in items2]), unsafe_allow_html=True)
+
+st.write("")
+st.write("")
+st.write("")
 
 
 P17_list = ['Syk_p',
@@ -124,8 +155,6 @@ P17_list = ['Syk_p',
  'Bax_p',
  'IRS1_p']
 
-st.header("Examples from the 17 selected proteins")
-
 # Select 5 random proteins from the P17_list
 random_proteins = random.sample(P17_list, 5)
 
@@ -140,8 +169,15 @@ fig3 = px.box(melted_df_random, x='Proteins', y='Protein Levels', color='outcome
              #title='Boxplot of 5 Randomly Selected Proteins',
              category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']},
              color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'})
+fig3.update_layout(title_font = dict(size = 25))
 
 fig3.update_layout(
+            title={
+                    'text': "Examples from the 17 selected proteins",
+                    'y':1.0,
+                    'x':0,
+                    'xanchor': 'left',
+                    'yanchor': 'top'},
     #title="Plot Title",
     xaxis_title="Proteins",
     yaxis_title="Protein Levels",
