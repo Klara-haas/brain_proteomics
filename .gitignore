@@ -28,3 +28,9 @@ MANIFEST
 
 # PyInstaller
 ".gitignore" 161L, 3088B
+
+
+.python-version1
+model/brain-proteomics.csv
+model/requirements.txt
+.gitignore
