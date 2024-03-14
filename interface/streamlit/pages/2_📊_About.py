@@ -57,14 +57,14 @@ with c1:
                 height = 450,
                 width = 450,
                 xaxis_title=None,
-                xaxis = dict(title_font = dict(size = 16),
-                            tickfont = dict(size = 16)),
-                yaxis = dict(title_font = dict(size = 16),
-                            tickfont = dict(size = 16)),
-                font=dict(size=14),
+                xaxis = dict(title_font = dict(size = 20),
+                            tickfont = dict(size = 20)),
+                yaxis = dict(title_font = dict(size = 20),
+                            tickfont = dict(size = 20)),
+                font=dict(size=18),
                 legend_title=None,
                 legend=dict(
-                    font = dict(size = 16),
+                    font = dict(size = 20),
                     orientation="h",
                     yanchor="bottom",
                     y=-0.2,
@@ -103,13 +103,13 @@ with c2:
                 xaxis_title="Years to birth",
                 yaxis_title="Count",
                 legend_title="Gender",
-                xaxis = dict(title_font = dict(size = 16),
-                            tickfont = dict(size = 16)),
-                yaxis = dict(title_font = dict(size = 16),
-                            tickfont = dict(size = 16)),
+                xaxis = dict(title_font = dict(size = 20),
+                            tickfont = dict(size = 20)),
+                yaxis = dict(title_font = dict(size = 20),
+                            tickfont = dict(size = 20)),
                 legend=dict(
-                    font = dict(size = 14),
-                    title_font = dict(size = 16)
+                    font = dict(size = 18),
+                    title_font = dict(size = 20)
                     )
                 )
 
@@ -181,14 +181,14 @@ fig3.update_layout(
     #title="Plot Title",
     xaxis_title="Proteins",
     yaxis_title="Protein Levels",
-    xaxis = dict(title_font = dict(size = 16),
-                 tickfont = dict(size = 14)),
-    yaxis = dict(title_font = dict(size = 16),
-                 tickfont = dict(size = 16)),
+    xaxis = dict(title_font = dict(size = 20),
+                 tickfont = dict(size = 18)),
+    yaxis = dict(title_font = dict(size = 20),
+                 tickfont = dict(size = 18)),
     legend_title= None,
-    font=dict(size=14),
+    font=dict(size=18),
     legend=dict(
-        font = dict(size = 16)
+        font = dict(size = 20)
         )
 )
 
@@ -202,10 +202,10 @@ st.write("")
 st.write("")
 
 items3 = ["Machine learning",
-          "18 features (17 selected proteins + age)"
+          "17 selected proteins & age (18 features)"
           ]
 st.markdown("## Final Analysis:")
-st.markdown("\n".join([f"- <span style='font-size: 20px'>{item}</span>" for item in items3]), unsafe_allow_html=True)
+st.markdown("\n".join([f"- <span style='font-size: 22px'>{item}</span>" for item in items3]), unsafe_allow_html=True)
 
 st.divider()
 st.write('📊 Original Dataset found at:')

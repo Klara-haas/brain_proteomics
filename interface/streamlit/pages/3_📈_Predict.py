@@ -7,6 +7,7 @@ import requests
 from io import BytesIO
 from PIL import Image
 import plotly.express as px
+import os
 
 st.set_page_config(page_title="Model & Prediction", page_icon="📈", layout = "wide")
 
@@ -22,7 +23,7 @@ st.markdown(
     """
     <style>
     .css-1v3fvcr {
-        font-size: 20px; /* Adjust the font size as needed */
+        font-size: 22px; /* Adjust the font size as needed */
     }
     </style>
     """,
@@ -53,13 +54,13 @@ if df_upload is not None:
             xaxis_title="Years to birth",
             yaxis_title="Count",
             legend_title="Gender",
-            xaxis = dict(title_font = dict(size = 16),
-                         tickfont = dict(size = 16)),
-            yaxis = dict(title_font = dict(size = 16),
-                         tickfont = dict(size = 16)),
+            xaxis = dict(title_font = dict(size = 20),
+                         tickfont = dict(size = 20)),
+            yaxis = dict(title_font = dict(size = 20),
+                         tickfont = dict(size = 20)),
             legend=dict(
-                font = dict(size = 14),
-                title_font = dict(size = 16)
+                font = dict(size = 18),
+                title_font = dict(size = 20)
                 )
             )
 
@@ -67,48 +68,6 @@ if df_upload is not None:
 else:
     st.write('Nothing uploaded yet')
 
-
-
-# ######### Run prediction for 1 sample ##########################################
-# #@app.post("/predict_uploaded_file")
-# def predict_uploaded_file(file: UploadFile = File(...)):
-#     contents = file.file.read()
-#     print(type(contents))
-#     decoded_str = contents.decode('utf-8')
-#     print(type(decoded_str))
-#     print(decoded_str)
-
-#     rows = decoded_str.split('\n')
-
-#     # Split each row into columns
-#     data = [row.split(',') for row in rows]
-
-#     # Convert the data into a DataFrame
-#     df = pd.DataFrame(data[1:], columns=data[0])
-#     print(df.head(3))
-
-#     df = df.drop(columns="Identifier", axis = 1)
-
-
-#     # Preprocess
-#     X_pred = preprocess_input(df)
-
-#     # Predict data
-#     model = load_model(path ='/',
-#                         file = 'sgd_model.pkl')
-
-#     outcome_num = int(model.predict(X_pred)[0])
-#     if outcome_num == 0:
-#         outcome = "Oligodendroglioma"
-#         probability = round(float(model.predict_proba(X_pred)[0][0]), 4)
-#     else:
-#         outcome = "Astrocytoma"
-#         probability = round(float(model.predict_proba(X_pred)[0][1]), 4)
-
-#     return {
-#                 "Outcome": outcome,
-#                 "Probability": probability
-#     }
 
 
 
@@ -136,20 +95,16 @@ if st.button('Run prediction'):
                                           2: "Probability"})
 
     # Show result dataframe with prediction
-    st.subheader("Results of prediction")
-    st.write("")
-    ca, cb = st.columns([2,2])
+
+    ca, cb = st.columns([2.2,1.8], gap = "large")
     with ca:
+        st.subheader("Results of prediction")
+        st.write("")
         st.dataframe(result_df, use_container_width=True)
 
-    st.write("")
-
-    c2, c3 = st.columns([1,1], gap = "medium")
-
-    # Show prediction plots
     # Pie chart
-    with c2:
-        c2.subheader("Proportion of predicted cancer types")
+    with cb:
+        cb.subheader("Proportion of predicted cancer types")
         st.write("")
 
         tmp = pd.DataFrame(result_df[["Prediction"]].value_counts())
@@ -167,14 +122,14 @@ if st.button('Run prediction'):
             width = 450,
             #title="Plot Title",
             xaxis_title=None,
-            xaxis = dict(title_font = dict(size = 16),
-                         tickfont = dict(size = 16)),
-            yaxis = dict(title_font = dict(size = 16),
-                         tickfont = dict(size = 16)),
-            font=dict(size=14),
+            xaxis = dict(title_font = dict(size = 20),
+                         tickfont = dict(size = 20)),
+            yaxis = dict(title_font = dict(size = 20),
+                         tickfont = dict(size = 20)),
+            font=dict(size=18),
             legend_title=None,
             legend=dict(
-                font = dict(size = 16),
+                font = dict(size = 20),
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
@@ -186,74 +141,100 @@ if st.button('Run prediction'):
         st.plotly_chart(fig,height=500, width = 450)
 
 
-    # Histogram
-    with c2:
-        c2.subheader("Distribution of prediction probabilities")
-        st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
 
-        fig = px.histogram(result_df, x="Probability", color="Prediction", nbins = 10,
-                    marginal="rug", # Add marginal rug plots on the axes
-                    color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'})
+    #c2, c3 = st.columns([1.5, 2.5], gap = "medium")
 
-        fig.update_yaxes(tickfont=dict(size=16))
-        fig.update_xaxes(tickfont=dict(size=16))
-        fig.update_layout(
-            height=450,
-            width=450,
-            xaxis_title=None,
-            #yaxis_title="Probability",
-            yaxis=dict(title_font=dict(size=16)),
-            yaxis_range=[0, 1],
-            legend_title=None,
-            font=dict(size=14),
-            legend=dict(
-                font=dict(size=16),
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="center",
-                x=0.5
+    # Boxplot of probabilities
+    # with c2:
+    st.subheader("Probability of predicted cancer types")
+    st.write("")
+
+    fig = px.box(result_df, x = "Prediction", y='Probability', points = "outliers",
+                    color='Prediction',
+                    color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'}
+                    )
+                #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
+                #)
+
+    fig.update_yaxes(tickfont=dict(size=20))
+    fig.update_xaxes(tickfont=dict(size=20))
+    #fig.update_traces(marker=dict(colors=['red', 'blue']))
+    fig.update_layout(
+        height = 450,
+        width = 450,
+        #title="Plot Title",
+        xaxis_title=None,
+        yaxis_title="Probability",
+        yaxis = dict(title_font = dict(size = 20)),
+        yaxis_range=[0,1],
+        legend_title=None,
+        font=dict(size=18),
+        legend=dict(
+            font = dict(size = 20),
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="center",
+            x=0.5
             )
         )
+    st.plotly_chart(fig,height=500, width = 500)
 
-        st.plotly_chart(fig, height=500, width=500)
+    ###### Last Page ###############################################################
+    st.write("")
+    st.write("")
+    st.write("")
 
+    st.markdown("# We can predict a patient's cancer type without invasive methods!")
+    path = os.path.dirname(__file__)
+    image2_path = os.path.join(path,"..", "images","Final.jpg")
 
-    # Boxplot
-    with c3:
-        c3.subheader("Probability of predicted cancer types")
-        st.write("")
-
-        fig = px.box(result_df, x = "Prediction", y='Probability', points = "outliers",
-                     color='Prediction',
-                     color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'}
-                     )
-                    #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
-                    #)
-
-        fig.update_yaxes(tickfont=dict(size=16))
-        fig.update_xaxes(tickfont=dict(size=16))
-        #fig.update_traces(marker=dict(colors=['red', 'blue']))
-        fig.update_layout(
-            height = 450,
-            width = 450,
-            #title="Plot Title",
-            xaxis_title=None,
-            yaxis_title="Probability",
-            yaxis = dict(title_font = dict(size = 16)),
-            yaxis_range=[0,1],
-            legend_title=None,
-            font=dict(size=14),
-            legend=dict(
-                font = dict(size = 16),
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="center",
-                x=0.5
-                )
-            )
-        st.plotly_chart(fig,height=500, width = 500)
+    image2 = Image.open(image2_path)
+    st.image(image2, use_column_width=True)
 
 else:
     pass
+
+
+
+
+
+
+############### Unused code ####################################################
+
+# HISTOGRAM
+    # # Histogram
+    # with c2:
+    #     c2.subheader("Distribution of prediction probabilities")
+    #     st.write("")
+    #     #df = px.data.result_df
+    #     #fig = px.histogram(df, x="total_bill")
+    #     fig = px.histogram(result_df, x="Probability", nbins = 20, color = "Prediction",
+    #                 marginal="box", # Add marginal rug plots on the axes
+    #                 color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'})
+
+    #     fig.update_yaxes(tickfont=dict(size=20))
+    #     fig.update_xaxes(tickfont=dict(size=20))
+    #     fig.update_layout(
+    #         height=450,
+    #         width=450,
+    #         xaxis_title= "Probability",
+    #         yaxis_title="Count",
+    #         yaxis=dict(title_font=dict(size=20)),
+    #         xaxis=dict(title_font=dict(size=20)),
+    #         xaxis_range=[0, 1],
+    #         legend_title=None,
+    #         font=dict(size=18),
+    #         legend=dict(
+    #             font=dict(size=20),
+    #             orientation="h",
+    #             yanchor="bottom",
+    #             y=1.02,
+    #             xanchor="center",
+    #             x=0.5
+    #         )
+    #     )

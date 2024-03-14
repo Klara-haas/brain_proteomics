@@ -9,6 +9,12 @@ import os
 
 st.set_page_config(page_title="Proteomics Data for Earlier Brain Cancer Detection", page_icon="🧬", layout = "wide")
 
+st.markdown(f'''
+    <style>
+    section[data-testid="stSidebar"] .css-ng1t4o {{width: 5rem;}}
+    </style>
+''',unsafe_allow_html=True)
+
 
 #st.title('Predicting Brain Cancer using Machine Learning')
 

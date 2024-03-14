@@ -68,10 +68,10 @@ with tabs[1]:
     with col3:
         st.write("")
         st.write("")
-        image2_path = os.path.join(path,"..", "images","41374_2003_Article_BF3780627_Fig1_HTML.jpg")
+        image2_path = os.path.join(path,"..", "images","Problem.jpg")
 
         image2 = Image.open(image2_path)
-        st.image(image2, caption='Histopathologic Classification of Gliomas', use_column_width=True)
+        st.image(image2, use_column_width=True)
 
     with col4:
         st.write("")
