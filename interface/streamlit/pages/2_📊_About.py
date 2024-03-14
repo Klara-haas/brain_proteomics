@@ -44,8 +44,10 @@ fig1 = px.pie(names=outcome_percentages.index, values=outcome_percentages.values
               labels=outcome_percentages.index)
 
 # Display figure 1
-fig1.update_traces(marker=dict(colors=['red', 'blue']))
+fig1.update_traces(marker=dict(colors=['#265073', '#2D9596']))
+#fig1.update_traces(marker=dict(colors=['red', 'blue']))
 st.plotly_chart(fig1)
+
 
 
 # Add text between figures
@@ -54,14 +56,14 @@ st.header("Age and gender distribution")
 # Plotly figure 2
 fig2 = px.histogram(gender_age_outcome, x="age", color="gender", marginal="box",
                     hover_data=gender_age_outcome.columns,
-                    color_discrete_map={'female': 'blue', 'male': 'red'})
+                    color_discrete_map={'female': '#81689D', 'male': '#FFD0EC'})
 
 # Display figure 2
 st.plotly_chart(fig2)
 
 
 # Add text between figures
-items2 = ["Statistical comparison bewtween the two cancer types",
+items2 = ["Statistical comparison between the two cancer types",
         "17 significantly different proteins",
         "Including age as a feature / excluding gender"
 ]
@@ -103,7 +105,7 @@ melted_df_random['outcome'] = melted_df_random['outcome'].map(outcome_mapping)
 fig3 = px.box(melted_df_random, x='Proteins', y='Protein Levels', color='outcome',
              #title='Boxplot of 5 Randomly Selected Proteins',
              category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']},
-             color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'})
+             color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'})
 
 # Display figure 3
 st.plotly_chart(fig3)

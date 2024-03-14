@@ -48,7 +48,7 @@ if data is not None:
 if df_upload is not None:
     fig = px.histogram(df_upload, x="years_to_birth",  color="gender", marginal="box",
                    hover_data=df_upload.columns,
-                   color_discrete_map={'female': 'blue', 'male': 'red'})
+                   color_discrete_map={'female': '#81689D', 'male': '#FFD0EC'})
     st.plotly_chart(fig)
 else:
     st.write('Nothing uploaded yet')
@@ -123,24 +123,30 @@ if st.button('Run prediction for all samples'):
 
 
     st.subheader("Results of prediction")
-    st.write(result_df)
+    st.write("")
+    ca, cb = st.columns([2,2])
+    with ca:
+        st.dataframe(result_df, use_container_width=True)
 
+    st.write("")
 
     c2, c3 = st.columns([1,1], gap = "medium")
 
     with c2:
         c2.subheader("Proportion of predicted cancer types")
+        st.write("")
+
         tmp = pd.DataFrame(result_df[["Prediction"]].value_counts())
         fig = px.pie(tmp,
                      values=  result_df["Prediction"].value_counts().values,
                      names = result_df["Prediction"].sort_values().unique(),
-                     color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'}
+                     color_discrete_map={'Oligodendroglioma': '#265073', 'Astrocytoma': '#2D9596'}
                      #color=result_df["Prediction"].unique().sort()
                      )
 
         fig.update_yaxes(tickfont=dict(size=14))
         fig.update_xaxes(tickfont=dict(size=14))
-        fig.update_traces(marker=dict(colors=['red', 'blue']))
+        fig.update_traces(marker=dict(colors=['#265073', '#2D9596']))
 
         fig.update_layout(
             height = 450,
@@ -178,15 +184,17 @@ if st.button('Run prediction for all samples'):
 
     with c3:
         c3.subheader("Probability of predicted cancer types")
-        fig = px.box(result_df, x = "Prediction", y='Probability',
+        st.write("")
+
+        fig = px.box(result_df, x = "Prediction", y='Probability', points = "outliers",
                      color='Prediction',
-                     color_discrete_map={'Oligodendroglioma': 'blue', 'Astrocytoma': 'red'}
+                     color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'}
                      )
                     #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
                     #)
 
-        fig.update_yaxes(tickfont=dict(size=14))
-        fig.update_xaxes(tickfont=dict(size=14))
+        fig.update_yaxes(tickfont=dict(size=16))
+        fig.update_xaxes(tickfont=dict(size=16))
         #fig.update_traces(marker=dict(colors=['red', 'blue']))
         fig.update_layout(
             height = 450,
@@ -194,6 +202,9 @@ if st.button('Run prediction for all samples'):
             #title="Plot Title",
             xaxis_title=None,
             yaxis_title="Probability",
+            yaxis = dict(title_font = dict(size = 16)),
+            #yaxes = title_font=dict(size=12))
+            yaxis_range=[0,1],
             legend_title=None,
             font=dict(
                 #family="Courier New, monospace",
@@ -201,7 +212,7 @@ if st.button('Run prediction for all samples'):
                 #color="RebeccaPurple"
                 ),
             legend=dict(
-                font = dict(size = 14),
+                font = dict(size = 16),
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
