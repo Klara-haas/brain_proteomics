@@ -186,15 +186,15 @@ if st.button('Run prediction for all samples'):
         c3.subheader("Probability of predicted cancer types")
         st.write("")
 
-        fig = px.box(result_df, x = "Prediction", y='Probability',
+        fig = px.box(result_df, x = "Prediction", y='Probability', points = "outliers",
                      color='Prediction',
                      color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'}
                      )
                     #category_orders={'outcome': ['Oligodendroglioma', 'Astrocytoma']}
                     #)
 
-        fig.update_yaxes(tickfont=dict(size=14))
-        fig.update_xaxes(tickfont=dict(size=14))
+        fig.update_yaxes(tickfont=dict(size=16))
+        fig.update_xaxes(tickfont=dict(size=16))
         #fig.update_traces(marker=dict(colors=['red', 'blue']))
         fig.update_layout(
             height = 450,
@@ -202,6 +202,9 @@ if st.button('Run prediction for all samples'):
             #title="Plot Title",
             xaxis_title=None,
             yaxis_title="Probability",
+            yaxis = dict(title_font = dict(size = 16)),
+            #yaxes = title_font=dict(size=12))
+            yaxis_range=[0,1],
             legend_title=None,
             font=dict(
                 #family="Courier New, monospace",
@@ -209,7 +212,7 @@ if st.button('Run prediction for all samples'):
                 #color="RebeccaPurple"
                 ),
             legend=dict(
-                font = dict(size = 14),
+                font = dict(size = 16),
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
