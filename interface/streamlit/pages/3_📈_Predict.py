@@ -135,7 +135,7 @@ if st.button('Run prediction'):
                                           1: "Prediction",
                                           2: "Probability"})
 
-
+    # Show result dataframe with prediction
     st.subheader("Results of prediction")
     st.write("")
     ca, cb = st.columns([2,2])
@@ -146,6 +146,8 @@ if st.button('Run prediction'):
 
     c2, c3 = st.columns([1,1], gap = "medium")
 
+    # Show prediction plots
+    # Pie chart
     with c2:
         c2.subheader("Proportion of predicted cancer types")
         st.write("")
@@ -184,6 +186,40 @@ if st.button('Run prediction'):
         st.plotly_chart(fig,height=500, width = 450)
 
 
+    # Histogram
+    with c2:
+        c2.subheader("Distribution of prediction probabilities")
+        st.write("")
+
+        fig = px.histogram(result_df, x="Probability", color="Prediction", nbins = 10,
+                    marginal="rug", # Add marginal rug plots on the axes
+                    color_discrete_map={'Oligodendroglioma': '#2D9596', 'Astrocytoma': '#265073'})
+
+        fig.update_yaxes(tickfont=dict(size=16))
+        fig.update_xaxes(tickfont=dict(size=16))
+        fig.update_layout(
+            height=450,
+            width=450,
+            xaxis_title=None,
+            #yaxis_title="Probability",
+            yaxis=dict(title_font=dict(size=16)),
+            yaxis_range=[0, 1],
+            legend_title=None,
+            font=dict(size=14),
+            legend=dict(
+                font=dict(size=16),
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="center",
+                x=0.5
+            )
+        )
+
+        st.plotly_chart(fig, height=500, width=500)
+
+
+    # Boxplot
     with c3:
         c3.subheader("Probability of predicted cancer types")
         st.write("")
