@@ -12,7 +12,11 @@ We developed a machine learning framework including cleaning and preprocessing t
 Cleaning and preprocessing the raw data includes scaling the relevant proteins, which showed statistically different expression patterns between the two tumor types. As data points were limited, we created synthetic data using a SMOTE approach for the training set. We then performed a grid search for logistic regression parameters to minimize the recall of cancer type Astroglioma. The trained model was cross-validated with an evaluation set and tested afterwards with a test set to prevent data leakage. 
 
 ## How to Use?
-The model’s prediction for the cancer type can be accessed through our user-friendly API and website: https://brainproteomicspredict.streamlit.app/Introduction. Here the user can upload a CSV-file containing the proteomics data of patients. The output shows the predicted cancer type and the probability. 
+The model’s prediction for the cancer type can be accessed through our user-friendly API and website: https://brainproteomicspredict.streamlit.app/Introduction. Here the user can upload a CSV-file containing the proteomics data of patients. 
+![input](https://github.com/Klara-haas/brain_proteomics/assets/155819144/77d492a3-fe63-4f15-8e8e-0851cfd2a425)
+
+The output shows the predicted cancer type and the probability. 
+![image](https://github.com/Klara-haas/brain_proteomics/assets/155819144/0e4babd2-572b-45eb-ae8a-60d8cbf878bf)
 
 By running the ‘fast_api.py’ app locally, the user can also use the saved model to predict the cancer type of the input locally on the machine. 
 
